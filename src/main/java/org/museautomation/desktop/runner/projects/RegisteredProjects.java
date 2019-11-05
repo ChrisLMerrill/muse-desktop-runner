@@ -1,11 +1,13 @@
 package org.museautomation.desktop.runner.projects;
 
+import org.museautomation.desktop.runner.settings.*;
+
 import java.util.*;
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-public class RegisteredProjects extends BaseSettingsFolder
+public class RegisteredProjects extends SettingsFolder
     {
     public List<RegisteredProject> asList()
         {

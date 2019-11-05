@@ -1,4 +1,4 @@
-package org.museautomation.desktop.runner.projects;
+package org.museautomation.desktop.runner.settings;
 
 import com.fasterxml.jackson.databind.*;
 import org.slf4j.*;
@@ -11,7 +11,7 @@ import java.io.*;
  *
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-public abstract class BaseSettingsFolder
+public abstract class SettingsFolder
     {
     protected abstract void accept(String name, Object settings);
 
@@ -41,5 +41,5 @@ public abstract class BaseSettingsFolder
 
     public static File BASE_FOLDER = new File(new File(System.getProperty("user.home")), ".muse");
 
-    private final static Logger LOG = LoggerFactory.getLogger(BaseSettingsFolder.class);
+    private final static Logger LOG = LoggerFactory.getLogger(SettingsFolder.class);
     }

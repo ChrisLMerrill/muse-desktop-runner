@@ -2,6 +2,7 @@ package org.museautomation.desktop.runner;
 
 import org.junit.*;
 import org.museautomation.desktop.runner.projects.*;
+import org.museautomation.desktop.runner.settings.*;
 
 import java.io.*;
 
@@ -15,7 +16,7 @@ public class RegisteredProjectsTests
         {
         // point the settings folder to unit test data
         //noinspection ConstantConditions
-        BaseSettingsFolder.BASE_FOLDER = new File(getClass().getClassLoader().getResource("home").getFile());
+        SettingsFolder.BASE_FOLDER = new File(getClass().getClassLoader().getResource("home").getFile());
 
         RegisteredProjects projects = RegisteredProjects.get();
         Assert.assertEquals(2, projects.asList().size());
