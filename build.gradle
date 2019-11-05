@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+// Define the main class for the application
+mainClassName = 'App'
+
+dependencies {
+    implementation "org.musetest:muse-core:0.15"
+
+    testCompile 'junit:junit:4.12'
+}
+
+wrapper {
+    gradleVersion = '5.6.2'
+}
