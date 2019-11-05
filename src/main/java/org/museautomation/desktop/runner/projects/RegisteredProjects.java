@@ -39,7 +39,7 @@ public class RegisteredProjects extends SettingsFolder
         if (PROJECTS == null)
             {
             PROJECTS = new RegisteredProjects();
-            PROJECTS.loadFiles(FILENAME, RegisteredProject.class,null);
+            PROJECTS.loadFiles(FOLDER, RegisteredProject.class,null);
             }
         return PROJECTS;
         }
@@ -47,5 +47,5 @@ public class RegisteredProjects extends SettingsFolder
     private List<RegisteredProject> _projects = new ArrayList<>();
 
     private static RegisteredProjects PROJECTS;
-    private final static String FILENAME = "runner/projects";
+    private final static String FOLDER = "runner/projects";
     }
