@@ -17,14 +17,15 @@ public abstract class SettingsFolder
 
     protected void loadFiles(String path, Class type, ObjectMapper mapper)
         {
-        if (mapper == null)
-            mapper = new ObjectMapper();
         File folder = new File(BASE_FOLDER, path);
         if (!folder.exists())
             return;
 
         File[] files = folder.listFiles();
         if (files != null)
+            {
+            if (mapper == null)
+                mapper = new ObjectMapper();
             for (File source_file : files)
                 {
                 try (FileInputStream instream = new FileInputStream(source_file))
@@ -37,6 +38,7 @@ public abstract class SettingsFolder
                     LOG.error("Unable to load settings from " + source_file.getPath(), e);
                     }
                 }
+            }
         }
 
     public static File BASE_FOLDER = new File(new File(System.getProperty("user.home")), ".muse");
