@@ -12,8 +12,8 @@ repositories {
 mainClassName = 'App'
 
 dependencies {
-    implementation "org.musetest:muse-core:0.15"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.11.1"
+    implementation "org.musetest:muse-core:0.16"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.10"
     
     testImplementation 'junit:junit:4.12'
 }
