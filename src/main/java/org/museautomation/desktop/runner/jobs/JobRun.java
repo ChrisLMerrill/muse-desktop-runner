@@ -32,7 +32,7 @@ public class JobRun
         return _start_time;
         }
 
-    public void setStartTime(long start_time)
+    public void setStartTime(Long start_time)
         {
         _start_time = start_time;
         }
@@ -42,13 +42,13 @@ public class JobRun
         return _end_time;
         }
 
-    public void setEndTime(long end_time)
+    public void setEndTime(Long end_time)
         {
         _end_time = end_time;
         }
 
     private String _id;
     private String _job_id;
-    private long _start_time;
-    private long _end_time;
+    private Long _start_time;
+    private Long _end_time;
     }
