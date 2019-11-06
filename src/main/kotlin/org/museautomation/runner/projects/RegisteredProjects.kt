@@ -1,5 +1,7 @@
 package org.museautomation.runner.projects
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.museautomation.runner.settings.SettingsFolder
 
 import java.util.*
@@ -10,9 +12,11 @@ import java.util.*
 object  RegisteredProjects : SettingsFolder() {
     private val FOLDER = "runner/projects"
     private val _projects = ArrayList<RegisteredProject>()
+    private val mapper : ObjectMapper
 
     init {
-        loadFiles(FOLDER, RegisteredProject::class.java, null)
+        mapper = ObjectMapper().registerModule(KotlinModule())
+        loadFiles(FOLDER, RegisteredProject::class.java, mapper)
     }
 
     fun asList(): List<RegisteredProject> {

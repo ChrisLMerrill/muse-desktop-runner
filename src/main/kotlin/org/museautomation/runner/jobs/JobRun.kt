@@ -5,7 +5,7 @@ package org.museautomation.runner.jobs
  *
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-data class JobRun (var id: String? = null,
-                   var jobId: String? = null,
-                   var startTime: Long? = null,
-                   var endTime: Long? = null)
+data class JobRun (var id: String,
+                   var jobId: String,
+                   var startTime: Long?,
+                   var endTime: Long?)

@@ -1,5 +1,4 @@
 plugins {
-    id 'java'
     id 'application'
     id 'org.jetbrains.kotlin.jvm' version "1.3.50"
 }
@@ -14,8 +13,9 @@ mainClassName = 'App'
 
 dependencies {
     implementation "org.musetest:muse-core:0.15"
-
-    testCompile 'junit:junit:4.12'
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.11.1"
+    
+    testImplementation 'junit:junit:4.12'
 }
 
 wrapper {
