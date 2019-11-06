@@ -1,9 +1,9 @@
-package org.museautomation.desktop.runner.settings;
+package org.museautomation.runner.settings
 
-import com.fasterxml.jackson.databind.*;
-import org.slf4j.*;
+import com.fasterxml.jackson.databind.*
+import org.slf4j.*
 
-import java.io.*;
+import java.io.*
 
 /**
  * Represents a folder of homogenous settings files, where each file represents a instance of they setting type.
@@ -11,37 +11,35 @@ import java.io.*;
  *
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-public abstract class SettingsFolder
-    {
-    protected abstract void accept(String name, Object settings);
+abstract class SettingsFolder {
+    protected abstract fun accept(name: String, settings: Any)
 
-    protected void loadFiles(String path, Class type, ObjectMapper mapper)
-        {
-        File folder = new File(BASE_FOLDER, path);
+    @Suppress("SameParameterValue")
+    protected fun loadFiles(path: String, type: Class<*>, custom_mapper: ObjectMapper?) {
+        var mapper = custom_mapper
+        val folder = File(BASE_FOLDER, path)
         if (!folder.exists())
-            return;
+            return
 
-        File[] files = folder.listFiles();
-        if (files != null)
-            {
+        val files = folder.listFiles()
+        if (files != null) {
             if (mapper == null)
-                mapper = new ObjectMapper();
-            for (File source_file : files)
-                {
-                try (FileInputStream instream = new FileInputStream(source_file))
-                    {
-                    Object settings = mapper.readValue(instream, type);
-                    accept(source_file.getName(), settings);
+                mapper = ObjectMapper()
+            for (source_file in files) {
+                try {
+                    FileInputStream(source_file).use { instream ->
+                        val settings = mapper.readValue(instream, type)
+                        accept(source_file.name, settings)
                     }
-                catch (Exception e)
-                    {
-                    LOG.error("Unable to load settings from " + source_file.getPath(), e);
-                    }
+                } catch (e: Exception) {
+                    LOG.error("Unable to load settings from " + source_file.path, e)
                 }
             }
         }
-
-    public static File BASE_FOLDER = new File(new File(System.getProperty("user.home")), ".muse");
-
-    private final static Logger LOG = LoggerFactory.getLogger(SettingsFolder.class);
     }
+
+    companion object {
+        var BASE_FOLDER = File(File(System.getProperty("user.home")), ".muse")
+        private val LOG = LoggerFactory.getLogger(SettingsFolder::class.java)
+    }
+}

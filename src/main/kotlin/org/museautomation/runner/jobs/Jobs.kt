@@ -1,6 +1,6 @@
 package org.museautomation.runner.jobs
 
-import org.museautomation.desktop.runner.settings.*
+import org.museautomation.runner.settings.SettingsFolder
 
 import java.util.*
 
