@@ -12,7 +12,7 @@ import java.io.*
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
 abstract class SettingsFolder {
-    protected abstract fun accept(name: String, settings: Any)
+    protected abstract fun accept(filename: String, settings: Any)
 
     @Suppress("SameParameterValue")
     protected fun loadFiles(path: String, type: Class<*>, custom_mapper: ObjectMapper?) {
