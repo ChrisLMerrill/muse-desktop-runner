@@ -1,39 +1,34 @@
-package org.museautomation.desktop.runner;
+package org.museautomation.runner.jobs
 
-import org.junit.*;
-import org.museautomation.desktop.runner.jobs.*;
-import org.museautomation.desktop.runner.settings.*;
+import org.junit.*
+import org.museautomation.desktop.runner.settings.*
 
-import java.io.*;
+import java.io.*
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-public class JobRunsTests
-    {
+class JobRunsTests {
     @Test
-    public void readJobRunsFromFiles()
-        {
+    fun readJobRunsFromFiles() {
         // point the settings folder to unit test data
-        //noinspection ConstantConditions
-        SettingsFolder.BASE_FOLDER = new File(getClass().getClassLoader().getResource("home").getFile());
+        SettingsFolder.BASE_FOLDER = File(javaClass.classLoader.getResource("home")!!.file)
 
-        JobRuns runs = JobRuns.get();
-        Assert.assertEquals(2, runs.asList().size());
+        Assert.assertEquals(2, JobRuns.asList().size.toLong())
 
-        JobRun r1 = runs.asList().get(0);
-        Assert.assertEquals("r1", r1.getId());
-        Assert.assertEquals("job123", r1.getJobId());
-        Assert.assertEquals(1234, r1.getStartTime());
-        Assert.assertEquals(5678, r1.getEndTime());
+        val r1 = JobRuns.asList()[0]
+        Assert.assertEquals("r1", r1.id)
+        Assert.assertEquals("job123", r1.jobId)
+        Assert.assertEquals(1234L, r1.startTime)
+        Assert.assertEquals(5678L, r1.endTime)
 
-        JobRun r2 = runs.asList().get(1);
-        Assert.assertEquals("r2", r2.getId());
-        Assert.assertEquals("job456", r2.getJobId());
-        Assert.assertEquals(111, r2.getStartTime());
-        Assert.assertEquals(222, r2.getEndTime());
+        val r2 = JobRuns.asList()[1]
+        Assert.assertEquals("r2", r2.id)
+        Assert.assertEquals("job456", r2.jobId)
+        Assert.assertEquals(111L, r2.startTime)
+        Assert.assertEquals(222L, r2.endTime)
 
-        Assert.assertSame(r1, runs.get("r1"));
-        Assert.assertSame(r2, runs.get("r2"));
-        }
+        Assert.assertSame(r1, JobRuns["r1"])
+        Assert.assertSame(r2, JobRuns["r2"])
     }
+}

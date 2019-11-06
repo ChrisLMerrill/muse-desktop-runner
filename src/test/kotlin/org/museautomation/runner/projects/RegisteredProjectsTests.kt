@@ -1,37 +1,32 @@
-package org.museautomation.desktop.runner;
+package org.museautomation.runner.projects
 
-import org.junit.*;
-import org.museautomation.desktop.runner.projects.*;
-import org.museautomation.desktop.runner.settings.*;
+import org.junit.*
+import org.museautomation.desktop.runner.settings.*
 
-import java.io.*;
+import java.io.*
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-public class RegisteredProjectsTests
-    {
+class RegisteredProjectsTests {
     @Test
-    public void readProjectsFromFile()
-        {
+    fun readProjectsFromFile() {
         // point the settings folder to unit test data
-        //noinspection ConstantConditions
-        SettingsFolder.BASE_FOLDER = new File(getClass().getClassLoader().getResource("home").getFile());
+        SettingsFolder.BASE_FOLDER = File(javaClass.classLoader.getResource("home")!!.file)
 
-        RegisteredProjects projects = RegisteredProjects.get();
-        Assert.assertEquals(2, projects.asList().size());
+        Assert.assertEquals(2, RegisteredProjects.asList().size.toLong())
 
-        RegisteredProject p1 = projects.asList().get(0);
-        Assert.assertEquals("p1", p1.getId());
-        Assert.assertEquals("path1/path2/folder", p1.getPath());
-        Assert.assertEquals("Project #1", p1.getName());
+        val p1 = RegisteredProjects.asList().get(0)
+        Assert.assertEquals("p1", p1.id)
+        Assert.assertEquals("path1/path2/folder", p1.path)
+        Assert.assertEquals("Project #1", p1.name)
 
-        RegisteredProject p2 = projects.asList().get(1);
-        Assert.assertEquals("p2", p2.getId());
-        Assert.assertEquals("path/to/project", p2.getPath());
-        Assert.assertEquals("My second project", p2.getName());
+        val p2 = RegisteredProjects.asList().get(1)
+        Assert.assertEquals("p2", p2.id)
+        Assert.assertEquals("path/to/project", p2.path)
+        Assert.assertEquals("My second project", p2.name)
 
-        Assert.assertSame(p1, projects.get("p1"));
-        Assert.assertSame(p2, projects.get("p2"));
-        }
+        Assert.assertSame(p1, RegisteredProjects.get("p1"))
+        Assert.assertSame(p2, RegisteredProjects.get("p2"))
     }
+}
