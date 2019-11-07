@@ -16,13 +16,13 @@ abstract class SettingsFolder {
 
     @Suppress("SameParameterValue")
     protected fun loadFiles(path: String, type: Class<*>, custom_mapper: ObjectMapper?) {
-        var mapper = custom_mapper
         val folder = File(BASE_FOLDER, path)
         if (!folder.exists())
             return
 
         val files = folder.listFiles()
         if (files != null) {
+            var mapper = custom_mapper
             if (mapper == null)
                 mapper = ObjectMapper()
             for (source_file in files) {
@@ -35,6 +35,24 @@ abstract class SettingsFolder {
                     LOG.error("Unable to load settings from " + source_file.path, e)
                 }
             }
+        }
+    }
+
+    protected fun saveFile(settings: Any, path: String, filename: String, custom_mapper: ObjectMapper?) {
+        val folder = File(BASE_FOLDER, path)
+        if (!folder.exists())
+            if (!folder.mkdirs())
+                throw Exception("Unable to create settings folder: " + folder.absolutePath)
+
+        var mapper = custom_mapper
+        if (mapper == null)
+            mapper = ObjectMapper()
+        try {
+            FileOutputStream(File(folder, filename)).use { outstream ->
+                mapper.writeValue(outstream, settings)
+            }
+        } catch (e: Exception) {
+            LOG.error("Unable to save settings to " + path, e)
         }
     }
 

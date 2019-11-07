@@ -1,6 +1,7 @@
 package org.museautomation.runner.jobs
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.museautomation.runner.settings.SettingsFolder
 
@@ -15,7 +16,7 @@ object JobRuns : SettingsFolder() {
     private val mapper : ObjectMapper
 
     init {
-        mapper = ObjectMapper().registerModule(KotlinModule())
+        mapper = ObjectMapper().registerModule(KotlinModule()).enable(SerializationFeature.INDENT_OUTPUT)
         loadFiles(FOLDER, JobRun::class.java, mapper)
     }
 
@@ -28,6 +29,10 @@ object JobRuns : SettingsFolder() {
             if (id == run.id)
                 return run
         return null
+    }
+
+    fun save(run: JobRun) {
+        saveFile(run, FOLDER, run.id + ".json", mapper)
     }
 
     override fun accept(filename: String, settings: Any) {

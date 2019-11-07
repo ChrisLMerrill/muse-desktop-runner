@@ -8,4 +8,6 @@ package org.museautomation.runner.jobs
 data class JobRun (var id: String,
                    var jobId: String,
                    var startTime: Long?,
-                   var endTime: Long?)
+                   var endTime: Long?,
+                   var results: String?,
+                   var success: Boolean?)
