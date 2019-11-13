@@ -5,14 +5,13 @@ plugins {
 }
 
 repositories {
-    jcenter()
     mavenLocal()
+    jcenter()
 }
 
-group 'org.musetest'
+group 'org.museautomation'
 version '0.1'
 
-// Define the main class for the application
 application {
     mainClassName = 'org.museautomation.runner.JobRunner'
     applicationName = 'muse-runner'
