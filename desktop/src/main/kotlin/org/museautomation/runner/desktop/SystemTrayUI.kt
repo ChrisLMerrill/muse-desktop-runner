@@ -1,12 +1,13 @@
 package org.museautomation.runner.desktop
 
+import org.museautomation.runner.desktop.RunnerDesktopApp.Companion.APP
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 
-class SystemTrayUI(window: MainWindow)
+class SystemTrayUI
 {
-    val icon = TrayIcon(Toolkit.getDefaultToolkit().getImage(javaClass.getResource("/Mu-icon16.png")))
+    private val icon = TrayIcon(Toolkit.getDefaultToolkit().getImage(javaClass.getResource("/Mu-icon16.png")))
 
     init
     {
@@ -18,16 +19,16 @@ class SystemTrayUI(window: MainWindow)
             icon.addActionListener()
             {
                 println("double-clicked!")
-                window.show()
+                APP.showWindow()
             }
 
-            icon.popupMenu = createMenu(window)
+            icon.popupMenu = createMenu()
             val tray = SystemTray.getSystemTray()
             tray.add(icon)
         }
     }
 
-    fun createMenu(window: MainWindow): PopupMenu
+    private fun createMenu(): PopupMenu
     {
 
         val popup = PopupMenu()
@@ -42,12 +43,12 @@ class SystemTrayUI(window: MainWindow)
         display_menu.add(MenuItem("Warning"))
         display_menu.add(MenuItem("Info"))
         display_menu.add(MenuItem("None"))
-        display_menu.add(MenuItem("Exit"))
         popup.add(display_menu)
+        popup.addSeparator()
 
         val exit_item = MenuItem("Exit")
         popup.add(exit_item)
-        exit_item.addActionListener({ window.close() })
+        exit_item.addActionListener { APP.shutdown() }
 
         return popup
     }

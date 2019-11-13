@@ -5,21 +5,23 @@ import javafx.application.Platform
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.layout.GridPane
-import javafx.scene.layout.StackPane
 import javafx.stage.Stage
-import javafx.stage.WindowEvent
+import org.museautomation.runner.desktop.RunnerDesktopApp.Companion.APP
+import org.museautomation.runner.projects.RegisteredProjects
 
 class MainWindow : Application()
 {
     override fun start(stage: Stage)
     {
+        APP.window = this
+
         val hello_button = Button()
-        hello_button.setText("Print Greeting")
+        hello_button.text = "Print Greeting"
         hello_button.setOnAction { println("Hello, World!") }
 
         val exit_button = Button()
-        exit_button.setText("Exit")
-        exit_button.setOnAction { close() }
+        exit_button.text = "Exit"
+        exit_button.setOnAction { APP.shutdown() }
 
         val root_pane = GridPane()
         root_pane.children.add(hello_button)
@@ -27,9 +29,10 @@ class MainWindow : Application()
 
         val scene = Scene(root_pane, 300.0, 250.0)
 
-        stage.setOnCloseRequest(fun(event: WindowEvent)
-        {
-            stage.setIconified(true)
+        stage.setOnCloseRequest(
+        { event ->
+            APP.window?.close()
+            APP.window = null
             event.consume()
         })
         stage.title = "Hello World app"
@@ -38,20 +41,19 @@ class MainWindow : Application()
 
         _stage = stage
 
-        _tray_ui = SystemTrayUI(this)
+        val projects = RegisteredProjects.asList()
+        println("There are ${projects.size} projects.")
     }
 
     fun close()
     {
-        _tray_ui.teardown()
-        System.exit(0)
+        _stage.close()
     }
 
     fun show()
     {
-        Platform.runLater { _stage.setIconified(false) }
+        Platform.runLater { _stage.isIconified = false }
     }
 
-    lateinit var _stage : Stage
-    lateinit var _tray_ui : SystemTrayUI
+    private lateinit var _stage : Stage
 }
