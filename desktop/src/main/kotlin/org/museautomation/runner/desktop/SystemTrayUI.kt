@@ -30,20 +30,15 @@ class SystemTrayUI
 
     private fun createMenu(): PopupMenu
     {
-
         val popup = PopupMenu()
-        popup.add(MenuItem("About"))
-        popup.addSeparator()
-        popup.add(CheckboxMenuItem("Set auto size"))
-        popup.add(CheckboxMenuItem("Set tooltip"))
-        popup.addSeparator()
 
-        val display_menu = Menu("Display")
-        display_menu.add(MenuItem("Error"))
-        display_menu.add(MenuItem("Warning"))
-        display_menu.add(MenuItem("Info"))
-        display_menu.add(MenuItem("None"))
-        popup.add(display_menu)
+        val open_item = MenuItem("Open")
+        popup.add(open_item)
+        open_item.addActionListener { APP.showWindow() }
+
+        popup.addSeparator()
+        popup.add(MenuItem("do something"))
+        popup.add(MenuItem("do something else"))
         popup.addSeparator()
 
         val exit_item = MenuItem("Exit")
