@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version "1.3.50"
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+application {
+    mainClassName = 'org.museautomation.runner.desktop.MainWindow' // TODO
+    applicationName = 'muse-runner-desktop'
+    applicationDefaultJvmArgs = [
+        "--add-opens=javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED",
+        "--add-opens=javafx.graphics/com.sun.javafx.scene.traversal=ALL-UNNAMED",
+        "--add-opens=javafx.graphics/com.sun.javafx.text=ALL-UNNAMED",
+        "--add-opens=javafx.graphics/javafx.scene.text=ALL-UNNAMED",
+        ]
+}
+
+javafx {
+    version = "12.0.2"
+    modules = [ 'javafx.controls' ]
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+wrapper {
+    gradleVersion = '5.6.2'
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
