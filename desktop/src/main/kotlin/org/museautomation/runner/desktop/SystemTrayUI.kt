@@ -16,12 +16,7 @@ class SystemTrayUI
         else
         {
             icon.addMouseListener(TrayIconMouseListener())
-            icon.addActionListener()
-            {
-                println("double-clicked!")
-                APP.showWindow()
-            }
-
+            icon.addActionListener { APP.showWindow() }
             icon.popupMenu = createMenu()
             val tray = SystemTray.getSystemTray()
             tray.add(icon)
@@ -34,7 +29,7 @@ class SystemTrayUI
 
         val open_item = MenuItem("Open")
         popup.add(open_item)
-        open_item.addActionListener { APP.showWindow() }
+        open_item.addActionListener{ APP.showWindow() }
 
         popup.addSeparator()
         popup.add(MenuItem("do something"))
@@ -56,8 +51,9 @@ class SystemTrayUI
 
 private class TrayIconMouseListener : MouseAdapter()
 {
-    override fun mouseClicked(e: MouseEvent?)
+    override fun mouseClicked(e: MouseEvent)
     {
-        println("mouse clicked!")
+        if ( e.button == MouseEvent.BUTTON1 )
+            APP.showWindow()
     }
 }
