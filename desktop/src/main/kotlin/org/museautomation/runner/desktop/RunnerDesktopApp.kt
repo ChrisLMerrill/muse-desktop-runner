@@ -5,37 +5,46 @@ import javafx.application.Platform
 import javafx.stage.Stage
 import kotlin.system.exitProcess
 
+/*
+ * The core of the application. Opens new windows as needed (e.g. at startup) and puts an icon in the System Tray.
+ * Wne closing the main UI window, the app continues to run, accessible to the user via the system tray.
+ */
 class RunnerDesktopApp
 {
-    var window : MainWindow? = null
+    var main_stage: Stage? = null
 
     fun shutdown()
     {
-        window?.close()
+        main_stage?.close()
         TRAY.teardown()
         exitProcess(0)
     }
 
     fun showWindow()
     {
-        if (window == null)
+        val stage = main_stage
+        if (stage == null)
             createWindow()
         else
-            window?.show()
+        {
+            Platform.runLater({
+                stage.show()
+                stage.requestFocus()
+                stage.toFront()
+                stage.isIconified = false
+            })
+        }
     }
 
     fun createWindow()
     {
-        _window_count++
-        if (_window_count == 1)
-            Application.launch(MainWindow::class.java, *ARGS)
-        else
+        Platform.runLater(
         {
             val new_window = MainWindow()
-            Platform.runLater { new_window.start(Stage()) }
-
-            window = new_window
-        }
+            val new_stage = Stage()
+            main_stage = new_stage
+            new_window.start(new_stage)
+        })
     }
 
     companion object
@@ -43,16 +52,13 @@ class RunnerDesktopApp
         @JvmStatic
         fun main(args: Array<String>)
         {
-            Platform.setImplicitExit(false)
+            Platform.setImplicitExit(false)  // without this, the Platform shuts down when the first window closes...preventing creation of new windows
             ARGS = args
-            APP.createWindow()
+            Application.launch(MainWindow::class.java, *ARGS)
         }
 
-        lateinit var ARGS : Array<String>
+        lateinit var ARGS: Array<String>
         var APP = RunnerDesktopApp()
         val TRAY = SystemTrayUI()
-
     }
-
-    var _window_count = 0
 }

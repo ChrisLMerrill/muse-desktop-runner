@@ -1,7 +1,6 @@
 package org.museautomation.runner.desktop
 
 import javafx.application.Application
-import javafx.application.Platform
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.layout.GridPane
@@ -13,7 +12,7 @@ class MainWindow : Application()
 {
     override fun start(stage: Stage)
     {
-        APP.window = this
+        APP.main_stage = stage
 
         val hello_button = Button()
         hello_button.text = "Print Greeting"
@@ -31,8 +30,8 @@ class MainWindow : Application()
 
         stage.setOnCloseRequest(
         { event ->
-            APP.window?.close()
-            APP.window = null
+            APP.main_stage?.close()
+            APP.main_stage = null
             event.consume()
         })
         stage.title = "Hello World app"
@@ -43,16 +42,6 @@ class MainWindow : Application()
 
         val projects = RegisteredProjects.asList()
         println("There are ${projects.size} projects.")
-    }
-
-    fun close()
-    {
-        _stage.close()
-    }
-
-    fun show()
-    {
-        Platform.runLater { _stage.isIconified = false }
     }
 
     private lateinit var _stage : Stage
