@@ -1,18 +1,16 @@
 package org.museautomation.runner
 
-import org.museautomation.runner.jobs.*
+import org.museautomation.runner.jobs.JobRun
+import org.museautomation.runner.jobs.JobRuns
+import org.museautomation.runner.jobs.Jobs
 import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.runner.settings.SettingsFolder
-import org.musetest.core.MuseEvent
-import org.musetest.core.MuseProject
 import org.musetest.core.MuseTest
 import org.musetest.core.TestResult
 import org.musetest.core.context.ProjectExecutionContext
 import org.musetest.core.events.matching.EventTypeMatcher
 import org.musetest.core.execution.BlockingThreadedTestRunner
-import org.musetest.core.execution.ThreadedTestRunner
 import org.musetest.core.project.SimpleProject
-import org.musetest.core.resource.MuseResourceRunner
 import org.musetest.core.resource.storage.FolderIntoMemoryResourceStorage
 import org.musetest.core.resultstorage.LocalStorageLocationEventType
 import org.musetest.core.test.BasicTestConfiguration
