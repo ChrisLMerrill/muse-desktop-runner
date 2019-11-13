@@ -1,1 +1,3 @@
 rootProject.name = 'muse-runner-desktop'
+
+includeBuild '../runner-core'
