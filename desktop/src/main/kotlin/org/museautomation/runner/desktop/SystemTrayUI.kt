@@ -26,7 +26,13 @@ class SystemTrayUI
     private fun createMenu(): PopupMenu
     {
         val popup = PopupMenu()
+        populateMenu(popup)
+        return popup
+    }
 
+    private fun populateMenu(popup: PopupMenu)
+    {
+        popup.removeAll()
         val open_item = MenuItem("Open")
         popup.add(open_item)
         open_item.addActionListener{ APP.showWindow() }
@@ -39,8 +45,6 @@ class SystemTrayUI
         val exit_item = MenuItem("Exit")
         popup.add(exit_item)
         exit_item.addActionListener { APP.shutdown() }
-
-        return popup
     }
 
     fun teardown()
