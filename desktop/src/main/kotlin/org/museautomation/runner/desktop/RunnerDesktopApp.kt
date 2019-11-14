@@ -3,6 +3,10 @@ package org.museautomation.runner.desktop
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.stage.Stage
+import org.museautomation.runner.JobRunner
+import org.museautomation.runner.jobs.Job
+import org.museautomation.runner.jobs.JobRun
+import org.museautomation.runner.jobs.JobRuns
 import kotlin.system.exitProcess
 
 /*
@@ -13,6 +17,21 @@ class RunnerDesktopApp
 {
     var main_stage: Stage? = null
 
+    init
+    {
+        TRAY.listener = (object: SystemTrayListener{
+            override fun exitRequested() = shutdown()
+            override fun openRequested() = showWindow()
+            override fun runJobRequsted(job: Job)
+            {
+                val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null)
+                JobRunner().run(run)
+                run.endTime = System.currentTimeMillis()
+                JobRuns.save(run)
+            }
+        })
+    }
+
     fun shutdown()
     {
         Platform.runLater(
@@ -20,7 +39,6 @@ class RunnerDesktopApp
             main_stage?.close()
             TRAY.teardown()
             exitProcess(0)
-
         })
     }
 
@@ -62,7 +80,7 @@ class RunnerDesktopApp
         }
 
         lateinit var ARGS: Array<String>
-        var APP = RunnerDesktopApp()
         val TRAY = SystemTrayUI()
+        var APP = RunnerDesktopApp()
     }
 }

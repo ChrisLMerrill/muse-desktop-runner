@@ -1,6 +1,6 @@
 package org.museautomation.runner.desktop
 
-import org.museautomation.runner.desktop.RunnerDesktopApp.Companion.APP
+import org.museautomation.runner.jobs.Jobs
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -16,7 +16,7 @@ class SystemTrayUI
         else
         {
             icon.addMouseListener(TrayIconMouseListener())
-            icon.addActionListener { APP.showWindow() }
+            icon.addActionListener { listener.openRequested() }
             icon.popupMenu = createMenu()
             val tray = SystemTray.getSystemTray()
             tray.add(icon)
@@ -25,7 +25,7 @@ class SystemTrayUI
 
     private fun createMenu(): PopupMenu
     {
-        val popup = PopupMenu()
+        popup = PopupMenu()
         populateMenu(popup)
         return popup
     }
@@ -35,29 +35,40 @@ class SystemTrayUI
         popup.removeAll()
         val open_item = MenuItem("Open")
         popup.add(open_item)
-        open_item.addActionListener{ APP.showWindow() }
+        open_item.addActionListener{ listener.openRequested() }
 
         popup.addSeparator()
-        popup.add(MenuItem("do something"))
-        popup.add(MenuItem("do something else"))
-        popup.addSeparator()
+
+        if (Jobs.asList().size > 0)
+        {
+            for (job in Jobs.asList())
+            {
+                val item = MenuItem("Run " + job.id)
+                item.addActionListener { listener.runJobRequsted(job) }
+                popup.add(item)
+            }
+            popup.addSeparator()
+        }
 
         val exit_item = MenuItem("Exit")
         popup.add(exit_item)
-        exit_item.addActionListener { APP.shutdown() }
+        exit_item.addActionListener { listener.exitRequested() }
     }
 
     fun teardown()
     {
         SystemTray.getSystemTray().remove(icon)
     }
-}
 
-private class TrayIconMouseListener : MouseAdapter()
-{
-    override fun mouseClicked(e: MouseEvent)
+    private lateinit var popup : PopupMenu
+    var listener : SystemTrayListener = SystemTrayListener.NoopListener()
+
+    private inner class TrayIconMouseListener : MouseAdapter()
     {
-        if ( e.button == MouseEvent.BUTTON1 )
-            APP.showWindow()
+        override fun mouseClicked(e: MouseEvent)
+        {
+            if ( e.button == MouseEvent.BUTTON1 )
+                listener.openRequested()
+        }
     }
 }
