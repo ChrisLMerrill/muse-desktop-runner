@@ -15,9 +15,13 @@ class RunnerDesktopApp
 
     fun shutdown()
     {
-        main_stage?.close()
-        TRAY.teardown()
-        exitProcess(0)
+        Platform.runLater(
+        {
+            main_stage?.close()
+            TRAY.teardown()
+            exitProcess(0)
+
+        })
     }
 
     fun showWindow()
