@@ -28,6 +28,7 @@ class RunnerDesktopApp
                 JobRunner().run(run)
                 run.endTime = System.currentTimeMillis()
                 JobRuns.save(run)
+                notifyUserJobComplete(run)
             }
         })
     }
@@ -67,6 +68,19 @@ class RunnerDesktopApp
             main_stage = new_stage
             new_window.start(new_stage)
         })
+    }
+
+    fun notifyUserJobComplete(run: JobRun)
+    {
+        val success = run.success
+        if (success == null)
+            return
+
+        var message = "Job ${run.jobId} completed successfully"
+        if (!success)
+            message = "Job ${run.jobId} failed"
+        
+        TRAY.showNotification("Job completed", message, success)
     }
 
     companion object

@@ -60,6 +60,11 @@ class SystemTrayUI
         SystemTray.getSystemTray().remove(icon)
     }
 
+    fun showNotification(title: String, message: String, success: Boolean)
+    {
+        icon.displayMessage(title, message, if (success) TrayIcon.MessageType.INFO else TrayIcon.MessageType.ERROR)
+    }
+
     private lateinit var popup : PopupMenu
     var listener : SystemTrayListener = SystemTrayListener.NoopListener()
 
