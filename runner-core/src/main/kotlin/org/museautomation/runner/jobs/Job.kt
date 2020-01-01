@@ -1,6 +1,6 @@
 package org.museautomation.runner.jobs
 
-import org.musetest.core.values.descriptor.SubsourceDescriptor
+import org.musetest.core.values.descriptor.SimpleSubsourceDescriptor
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -8,4 +8,4 @@ import org.musetest.core.values.descriptor.SubsourceDescriptor
 data class Job (var id: String,
                 var taskId: String,
                 var projectId: String,
-                var inputs: List<SubsourceDescriptor>)
+                var inputs: List<SimpleSubsourceDescriptor>)
