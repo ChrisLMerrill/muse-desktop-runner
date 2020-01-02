@@ -3,10 +3,13 @@ package org.museautomation.runner.desktop
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.stage.Stage
+import org.musetest.core.plugins.MusePlugin
 import org.museautomation.runner.JobRunner
 import org.museautomation.runner.jobs.Job
 import org.museautomation.runner.jobs.JobRun
 import org.museautomation.runner.jobs.JobRuns
+import org.museautomation.runner.plugins.InputInjectionPlugin
+import org.musetest.core.values.ValueSourceConfiguration
 import kotlin.system.exitProcess
 
 /*
@@ -24,8 +27,14 @@ class RunnerDesktopApp
             override fun openRequested() = showWindow()
             override fun runJobRequsted(job: Job)
             {
+                // TODO Show a UI for collecting input, pass the input into the plugin (which will inject it into the test)
+                val plugins = ArrayList<MusePlugin>()
+                val element = InputInjectionPlugin()
+                element.addInput("username", ValueSourceConfiguration.forValue("BobJones"))
+                plugins.add(element)
+
                 val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null)
-                JobRunner().run(run)
+                JobRunner().run(run, plugins)
                 run.endTime = System.currentTimeMillis()
                 JobRuns.save(run)
                 notifyUserJobComplete(run)

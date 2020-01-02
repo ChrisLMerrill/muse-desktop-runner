@@ -10,18 +10,20 @@ import org.musetest.core.TestResult
 import org.musetest.core.context.ProjectExecutionContext
 import org.musetest.core.events.matching.EventTypeMatcher
 import org.musetest.core.execution.BlockingThreadedTestRunner
+import org.musetest.core.plugins.MusePlugin
 import org.musetest.core.project.SimpleProject
 import org.musetest.core.resource.storage.FolderIntoMemoryResourceStorage
 import org.musetest.core.resultstorage.LocalStorageLocationEventType
 import org.musetest.core.test.BasicTestConfiguration
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.util.*
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
 class JobRunner {
-    fun run(run: JobRun) {
+    fun run(run: JobRun, plugins: List<MusePlugin>) {
 
         val job = Jobs.get(run.jobId)
         if (job == null) {
@@ -50,6 +52,9 @@ class JobRunner {
         }
 
         val config = BasicTestConfiguration(resource)
+        plugins.forEach {
+            config.addPlugin(it)
+        }
         val runner = BlockingThreadedTestRunner(ProjectExecutionContext(project), config)
         runner.runTest()
 
@@ -87,7 +92,7 @@ class JobRunner {
 
             run.startTime = System.currentTimeMillis()
             JobRuns.save(run)
-            JobRunner().run(run)
+            JobRunner().run(run, Collections.emptyList())
             run.endTime = System.currentTimeMillis()
             JobRuns.save(run)
         }
