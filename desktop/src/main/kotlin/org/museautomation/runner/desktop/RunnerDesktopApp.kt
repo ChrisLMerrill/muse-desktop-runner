@@ -10,6 +10,7 @@ import org.museautomation.runner.jobs.JobRun
 import org.museautomation.runner.jobs.JobRuns
 import org.museautomation.runner.plugins.InputInjectionPlugin
 import org.musetest.core.values.ValueSourceConfiguration
+import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
 /*
@@ -27,19 +28,28 @@ class RunnerDesktopApp
             override fun openRequested() = showWindow()
             override fun runJobRequsted(job: Job)
             {
-                // TODO Show a UI for collecting input, pass the input into the plugin (which will inject it into the test)
-                val plugins = ArrayList<MusePlugin>()
-                val element = InputInjectionPlugin()
-                element.addInput("username", ValueSourceConfiguration.forValue("BobJones"))
-                plugins.add(element)
-
-                val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null)
-                JobRunner().run(run, plugins)
-                run.endTime = System.currentTimeMillis()
-                JobRuns.save(run)
-                notifyUserJobComplete(run)
+                val input_initial_values = HashMap<String, ValueSourceConfiguration>()
+                val window = CollectInputWindow (input_initial_values, { input -> runJob(job, input) })
+                window.open()
             }
         })
+    }
+
+    fun runJob(job: Job, input_list: Map<String, ValueSourceConfiguration>)
+    {
+        thread(start = true) {
+            val plugins = ArrayList<MusePlugin>()
+            val element = InputInjectionPlugin()
+            for (name in input_list.keys)
+                input_list.get(name)?.let { element.addInput(name, it) }
+            plugins.add(element)
+
+            val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null)
+            JobRunner().run(run, plugins)
+            run.endTime = System.currentTimeMillis()
+            JobRuns.save(run)
+            notifyUserJobComplete(run)
+        }
     }
 
     fun shutdown()
