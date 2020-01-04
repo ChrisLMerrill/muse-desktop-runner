@@ -3,12 +3,14 @@ package org.museautomation.runner.desktop
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.stage.Stage
-import org.musetest.core.plugins.MusePlugin
 import org.museautomation.runner.JobRunner
+import org.museautomation.runner.desktop.input.CollectInputWindow
 import org.museautomation.runner.jobs.Job
 import org.museautomation.runner.jobs.JobRun
 import org.museautomation.runner.jobs.JobRuns
 import org.museautomation.runner.plugins.InputInjectionPlugin
+import org.musetest.core.plugins.MusePlugin
+import org.musetest.core.project.SimpleProject
 import org.musetest.core.values.ValueSourceConfiguration
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
@@ -29,7 +31,7 @@ class RunnerDesktopApp
             override fun runJobRequsted(job: Job)
             {
                 val input_initial_values = HashMap<String, ValueSourceConfiguration>()
-                val window = CollectInputWindow (input_initial_values, { input -> runJob(job, input) })
+                val window = CollectInputWindow(SimpleProject(), job.inputs, input_initial_values, { input -> runJob(job, input) })
                 window.open()
             }
         })
