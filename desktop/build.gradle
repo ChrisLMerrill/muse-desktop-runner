@@ -33,6 +33,8 @@ javafx {
 
 dependencies {
     implementation "org.musetest:muse-core:[0.21,)"
+    implementation "org.musetest:ide-extend:[0.6,)"
+    implementation "org.musetest:ide-valuesource:[0.8,)"
     implementation 'org.museautomation:muse-runner:0.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
