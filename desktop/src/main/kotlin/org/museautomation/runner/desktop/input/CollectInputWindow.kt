@@ -4,7 +4,6 @@ import javafx.application.Platform
 import javafx.geometry.Pos
 import javafx.scene.Scene
 import javafx.scene.control.Button
-import javafx.scene.control.Label
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.stage.Stage
@@ -13,10 +12,9 @@ import org.musetest.core.values.ValueSourceConfiguration
 import org.musetest.core.values.descriptor.SubsourceDescriptor
 import org.musetest.ui.extend.edit.EditInProgress
 
-class CollectInputWindow(val project: MuseProject, val input_descriptors: List<SubsourceDescriptor>, val input_list: Map<String, ValueSourceConfiguration>, val listener: (inputs: Map<String, ValueSourceConfiguration>) -> Unit)
+class CollectInputWindow(private val project: MuseProject, private val input_descriptors: List<SubsourceDescriptor>, private val input_list: Map<String, ValueSourceConfiguration>, private val listener: (inputs: Map<String, ValueSourceConfiguration>) -> Unit)
 {
-    val label = Label("hello!")
-    lateinit var stage : Stage
+    private lateinit var stage : Stage
 
     fun open()
     {
@@ -31,13 +29,13 @@ class CollectInputWindow(val project: MuseProject, val input_descriptors: List<S
         }
     }
 
-    fun createScene() : Scene
+    private fun createScene() : Scene
     {
         val border_pane = BorderPane()
 
         // editor area
         val editor = InputEditorStack(NoopEdit(), project, input_descriptors, input_list)
-        editor.showSaveCancelButtons(false);
+        editor.showSaveCancelButtons(false)
         border_pane.center = editor.node
 
         // button area
@@ -69,11 +67,11 @@ class NoopEdit<ValueSourceConfiguration> : EditInProgress<ValueSourceConfigurati
 {
     override fun commit(p0: ValueSourceConfiguration?)
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // no-op
     }
 
     override fun cancel()
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // no-op
     }
 }

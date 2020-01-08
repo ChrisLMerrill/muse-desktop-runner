@@ -31,6 +31,8 @@ class RunnerDesktopApp
             override fun runJobRequsted(job: Job)
             {
                 val input_initial_values = HashMap<String, ValueSourceConfiguration>()
+                for (descriptor in job.inputs)
+                    input_initial_values[descriptor.name] = ValueSourceConfiguration.forValue(descriptor.defaultValueString)
                 val window = CollectInputWindow(SimpleProject(), job.inputs, input_initial_values, { input -> runJob(job, input) })
                 window.open()
             }
@@ -43,7 +45,7 @@ class RunnerDesktopApp
             val plugins = ArrayList<MusePlugin>()
             val element = InputInjectionPlugin()
             for (name in input_list.keys)
-                input_list.get(name)?.let { element.addInput(name, it) }
+                input_list[name]?.let { element.addInput(name, it) }
             plugins.add(element)
 
             val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null)
@@ -80,7 +82,7 @@ class RunnerDesktopApp
         }
     }
 
-    fun createWindow()
+    private fun createWindow()
     {
         Platform.runLater(
         {
@@ -91,11 +93,9 @@ class RunnerDesktopApp
         })
     }
 
-    fun notifyUserJobComplete(run: JobRun)
+    private fun notifyUserJobComplete(run: JobRun)
     {
-        val success = run.success
-        if (success == null)
-            return
+        val success = run.success ?: return
 
         var message = "Job ${run.jobId} completed successfully"
         if (!success)
@@ -114,7 +114,7 @@ class RunnerDesktopApp
             Application.launch(MainWindow::class.java, *ARGS)
         }
 
-        lateinit var ARGS: Array<String>
+        private lateinit var ARGS: Array<String>
         val TRAY = SystemTrayUI()
         var APP = RunnerDesktopApp()
     }

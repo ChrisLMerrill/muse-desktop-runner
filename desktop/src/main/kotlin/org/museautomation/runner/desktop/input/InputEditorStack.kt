@@ -9,15 +9,15 @@ import org.musetest.ui.extend.edit.EditInProgress
 import org.musetest.ui.extend.edit.stack.EditorStack
 import org.musetest.ui.valuesource.map.ValueSourceMapEditor
 
-class InputEditorStack(edit: EditInProgress<Object>, val project: MuseProject, val input_descriptors: List<SubsourceDescriptor>, val input_list: Map<String, ValueSourceConfiguration>) : EditorStack(edit, UndoStack())
+class InputEditorStack(edit: EditInProgress<Any>, project: MuseProject, input_descriptors: List<SubsourceDescriptor>, input_list: Map<String, ValueSourceConfiguration>) : EditorStack(edit, UndoStack())
 {
-    val _editor = ValueSourceMapEditor(project, undoStack)
+    private val _editor = ValueSourceMapEditor(project, undoStack)
 
     init
     {
         val fake_source = ValueSourceConfiguration()
         for (name in input_list.keys)
-            fake_source.sourceMap.put(name, input_list.get(name))
+            fake_source.addSource(name, input_list[name])
         _editor.setSource(fake_source, input_descriptors.toTypedArray())
     }
 
@@ -30,13 +30,13 @@ class InputEditorStack(edit: EditInProgress<Object>, val project: MuseProject, v
     {
         val inputs = HashMap<String, ValueSourceConfiguration>()
         for (name in _editor.source.sourceNames)
-            inputs.put(name, _editor.source.getSource(name))
+            inputs[name] = _editor.source.getSource(name)
         return inputs
     }
 
     override fun notifyEditCommit()
     {
-        TODO("not implemented")
+        // no-op
     }
 
 }
