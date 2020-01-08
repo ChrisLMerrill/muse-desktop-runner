@@ -59,6 +59,7 @@ class CollectInputWindow(val project: MuseProject, val input_descriptors: List<S
         border_pane.bottom = button_area
 
         val scene = Scene(border_pane, 500.0, 350.0)
+        scene.stylesheets.add(javaClass.getResource("/runner.css").toExternalForm())
         return scene
     }
 

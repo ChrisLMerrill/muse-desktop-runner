@@ -34,6 +34,7 @@ class MainWindow : Application()
         tabs.tabs.add(runs_tab)
 
         val scene = Scene(tabs, 300.0, 250.0)
+        scene.stylesheets.add(javaClass.getResource("/runner.css").toExternalForm())
 
         stage.setOnCloseRequest(
         { event ->
