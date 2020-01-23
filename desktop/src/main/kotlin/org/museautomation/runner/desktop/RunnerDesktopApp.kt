@@ -109,6 +109,7 @@ class RunnerDesktopApp
 
     protected fun getMainWindowClass(): Class<Application>
     {
+        @Suppress("UNCHECKED_CAST")
         return MainWindow::class.java as Class<Application>
     }
 
