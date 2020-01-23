@@ -1,5 +1,10 @@
 package org.museautomation.runner
 
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.TextNode
+import org.museautomation.runner.format.JsonNodeMapBuilder
+import org.museautomation.runner.format.MapFormat
 import org.museautomation.runner.jobs.JobRun
 import org.museautomation.runner.jobs.JobRuns
 import org.museautomation.runner.jobs.Jobs
@@ -78,6 +83,28 @@ class JobRunner {
                 LOG.info("success")
             else
                 LOG.info("${result.failures.size} failures recorded")
+        }
+
+        // print output to console
+        val outputs = job.outputs
+        var root : JsonNode = TextNode("")
+        if (outputs.size > 0)
+        {
+            val outfile = job.outputFile
+            if (outfile != null)
+            {
+                root = ObjectMapper().readTree(File(run.results, outfile))
+                for (output in outputs)
+                    println("${output.label}=${root.get(output.name)}")
+            }
+        }
+
+        if (result.isPass)
+        {
+            if (job.successMessageFormat == null)
+                run.message = "Completed successfully"
+            else
+                run.message = MapFormat.format(job.successMessageFormat, JsonNodeMapBuilder(root).buildMap())
         }
     }
 

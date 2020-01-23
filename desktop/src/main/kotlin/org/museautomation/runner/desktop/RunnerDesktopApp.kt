@@ -48,7 +48,7 @@ class RunnerDesktopApp
                 input_list[name]?.let { element.addInput(name, it) }
             plugins.add(element)
 
-            val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null)
+            val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null, null)
             JobRunner().run(run, plugins)
             run.endTime = System.currentTimeMillis()
             JobRuns.save(run)
@@ -100,7 +100,9 @@ class RunnerDesktopApp
         var message = "Job ${run.jobId} completed successfully"
         if (!success)
             message = "Job ${run.jobId} failed"
-        
+        if (run.message != null)
+            message += ": " + run.message
+
         TRAY.showNotification("Job completed", message, success)
     }
 

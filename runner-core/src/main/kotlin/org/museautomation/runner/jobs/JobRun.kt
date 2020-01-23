@@ -10,4 +10,5 @@ data class JobRun (var id: String,
                    var startTime: Long?,
                    var endTime: Long?,
                    var results: String?,
-                   var success: Boolean?)
+                   var success: Boolean?,
+                   var message: String?)

@@ -8,4 +8,7 @@ import org.musetest.core.values.descriptor.SimpleSubsourceDescriptor
 data class Job (var id: String,
                 var taskId: String,
                 var projectId: String,
-                var inputs: List<SimpleSubsourceDescriptor>)
+                var inputs: List<SimpleSubsourceDescriptor>,
+                var outputFile: String?,
+                var outputs: List<JobOutputSpec>,
+                var successMessageFormat: String?)
