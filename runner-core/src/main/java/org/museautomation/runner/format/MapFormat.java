@@ -131,12 +131,12 @@ public class MapFormat extends Format {
         return temp.format(pattern);
     }
 
-    /** Returns the value for given key. Subclass may define its own beahvior of
-    * this method. For example, if key is not defined, subclass can return <not defined>
+    /**
+     * @return the value for given key. Subclass may define its own beahvior of
+    * this method. For example, if key is not defined, subclass can return {not defined}
     * string.
     *
     * @param key Key.
-    * @return Value for this key.
     */
     protected Object processKey(String key) {
         return argmap.get(key);
@@ -148,6 +148,7 @@ public class MapFormat extends Format {
     * @exception IllegalArgumentException if number of arguments exceeds BUFSIZE or
     * parser found unmatched brackets (this exception should be switched off
     * using setExactMatch(false)).
+    * @return Return the processed pattern
     */
     public String processPattern(String newPattern) throws IllegalArgumentException {
         int idx = 0;
@@ -298,6 +299,7 @@ public class MapFormat extends Format {
     /**
     * Parses the string. Does not yet handle recursion (where
     * the substituted strings contain {n} references.)
+    * @param source The string to parse.
     * @return New format.
     */
     public String parse(String source) {
@@ -326,69 +328,6 @@ public class MapFormat extends Format {
         }
 
         return sbuf.toString();
-    }
-
-    /** Test whether formatter will throw exception if object for key was not found.
-    * If given map does not contain object for key specified, it could
-    * throw an exception. Returns true if throws. If not, key is left unchanged.
-    */
-    public boolean willThrowExceptionIfKeyWasNotFound() {
-        return throwex;
-    }
-
-    /** Specify whether formatter will throw exception if object for key was not found.
-    * If given map does not contain object for key specified, it could
-    * throw an exception. If does not throw, key is left unchanged.
-    * @param flag If true, formatter throws IllegalArgumentException.
-    */
-    public void setThrowExceptionIfKeyWasNotFound(boolean flag) {
-        throwex = flag;
-    }
-
-    /** Test whether both brackets are required in the expression.
-    * If not, use setExactMatch(false) and formatter will ignore missing right
-    * bracket. Advanced feature.
-    */
-    public boolean isExactMatch() {
-        return exactmatch;
-    }
-
-    /** Specify whether both brackets are required in the expression.
-    * If not, use setExactMatch(false) and formatter will ignore missing right
-    * bracket. Advanced feature.
-    * @param flag If true, formatter will ignore missing right bracket (default = false)
-    */
-    public void setExactMatch(boolean flag) {
-        exactmatch = flag;
-    }
-
-    /** Returns string used as left brace */
-    public String getLeftBrace() {
-        return ldel;
-    }
-
-    /** Sets string used as left brace
-    * @param delimiter Left brace.
-    */
-    public void setLeftBrace(String delimiter) {
-        ldel = delimiter;
-    }
-
-    /** Returns string used as right brace */
-    public String getRightBrace() {
-        return rdel;
-    }
-
-    /** Sets string used as right brace
-    * @param delimiter Right brace.
-    */
-    public void setRightBrace(String delimiter) {
-        rdel = delimiter;
-    }
-
-    /** Returns argument map */
-    public Map getMap() {
-        return argmap;
     }
 
     /** Sets argument map
