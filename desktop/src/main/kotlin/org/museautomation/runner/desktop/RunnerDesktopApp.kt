@@ -25,6 +25,7 @@ class RunnerDesktopApp
 
     init
     {
+        Platform.setImplicitExit(false)  // without this, the Platform shuts down when the first window closes...preventing creation of new windows
         TRAY.listener = (object: SystemTrayListener{
             override fun exitRequested() = shutdown()
             override fun openRequested() = showWindow()
@@ -106,18 +107,28 @@ class RunnerDesktopApp
         TRAY.showNotification("Job completed", message, success)
     }
 
+    protected fun getMainWindowClass(): Class<Application>
+    {
+        return MainWindow::class.java as Class<Application>
+    }
+
+    fun launch()
+    {
+        Application.launch(getMainWindowClass(), *ARGS)
+    }
+
     companion object
     {
         @JvmStatic
         fun main(args: Array<String>)
         {
-            Platform.setImplicitExit(false)  // without this, the Platform shuts down when the first window closes...preventing creation of new windows
+            APP = RunnerDesktopApp()
             ARGS = args
-            Application.launch(MainWindow::class.java, *ARGS)
+            APP.launch()
         }
 
         private lateinit var ARGS: Array<String>
         val TRAY = SystemTrayUI()
-        var APP = RunnerDesktopApp()
+        lateinit var APP : RunnerDesktopApp
     }
 }
