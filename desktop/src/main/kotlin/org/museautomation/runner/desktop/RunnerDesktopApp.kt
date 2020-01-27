@@ -19,7 +19,7 @@ import kotlin.system.exitProcess
  * The core of the application. Opens new windows as needed (e.g. at startup) and puts an icon in the System Tray.
  * Wne closing the main UI window, the app continues to run, accessible to the user via the system tray.
  */
-class RunnerDesktopApp
+open class RunnerDesktopApp
 {
     var main_stage: Stage? = null
 
@@ -128,7 +128,7 @@ class RunnerDesktopApp
             APP.launch()
         }
 
-        private lateinit var ARGS: Array<String>
+        lateinit var ARGS: Array<String>
         val TRAY = SystemTrayUI()
         lateinit var APP : RunnerDesktopApp
     }
