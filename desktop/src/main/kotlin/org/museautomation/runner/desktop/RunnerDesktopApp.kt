@@ -71,7 +71,13 @@ open class RunnerDesktopApp
     {
         val stage = main_stage
         if (stage == null)
-            createWindow()
+            Platform.runLater(
+            {
+                val new_window = createMainWindow()
+                val new_stage = Stage()
+                main_stage = new_stage
+                new_window.start(new_stage)
+            })
         else
         {
             Platform.runLater({
@@ -83,15 +89,9 @@ open class RunnerDesktopApp
         }
     }
 
-    private fun createWindow()
+    open fun createMainWindow() : Application
     {
-        Platform.runLater(
-        {
-            val new_window = MainWindow()
-            val new_stage = Stage()
-            main_stage = new_stage
-            new_window.start(new_stage)
-        })
+        return MainWindow()
     }
 
     private fun notifyUserJobComplete(run: JobRun)
@@ -107,7 +107,7 @@ open class RunnerDesktopApp
         TRAY.showNotification("Job completed", message, success)
     }
 
-    protected fun getMainWindowClass(): Class<Application>
+    open fun getMainWindowClass(): Class<Application>
     {
         @Suppress("UNCHECKED_CAST")
         return MainWindow::class.java as Class<Application>
