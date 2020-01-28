@@ -7,19 +7,19 @@ import java.awt.event.MouseEvent
 
 class SystemTrayUI
 {
-    private val icon = TrayIcon(Toolkit.getDefaultToolkit().getImage(javaClass.getResource("/Mu-icon16.png")))
-
+    lateinit var tray_icon : TrayIcon
     init
     {
         if (!SystemTray.isSupported())
             println("SystemTray is not supported :(")
         else
         {
-            icon.addMouseListener(TrayIconMouseListener())
-            icon.addActionListener { listener.openRequested() }
-            icon.popupMenu = createMenu()
+            tray_icon = TrayIcon(Toolkit.getDefaultToolkit().getImage(javaClass.getResource("/Mu-icon16.png")))
+            tray_icon.addMouseListener(TrayIconMouseListener())
+            tray_icon.addActionListener { listener.openRequested() }
+            tray_icon.popupMenu = createMenu()
             val tray = SystemTray.getSystemTray()
-            tray.add(icon)
+            tray.add(tray_icon)
         }
     }
 
@@ -57,12 +57,12 @@ class SystemTrayUI
 
     fun teardown()
     {
-        SystemTray.getSystemTray().remove(icon)
+        SystemTray.getSystemTray().remove(tray_icon)
     }
 
     fun showNotification(title: String, message: String, success: Boolean)
     {
-        icon.displayMessage(title, message, if (success) TrayIcon.MessageType.INFO else TrayIcon.MessageType.ERROR)
+        tray_icon.displayMessage(title, message, if (success) TrayIcon.MessageType.INFO else TrayIcon.MessageType.ERROR)
     }
 
     private lateinit var popup : PopupMenu

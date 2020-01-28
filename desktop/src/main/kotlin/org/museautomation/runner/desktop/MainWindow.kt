@@ -1,12 +1,12 @@
 package org.museautomation.runner.desktop
 
 import javafx.application.Application
+import javafx.collections.ObservableList
 import javafx.scene.Scene
-import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
-import javafx.scene.layout.GridPane
+import javafx.scene.image.Image
 import javafx.stage.Stage
 import org.museautomation.runner.desktop.RunnerDesktopApp.Companion.APP
 import org.museautomation.runner.jobs.JobRuns
@@ -35,6 +35,7 @@ open class MainWindow : Application()
             event.consume()
         })
         stage.title = getTitle()
+        addWindowIcons(stage.icons)
         stage.scene = scene
         stage.show()
 
@@ -42,6 +43,11 @@ open class MainWindow : Application()
 
         val projects = RegisteredProjects.asList()
         println("There are ${projects.size} projects.")
+    }
+
+    open fun addWindowIcons(icons: ObservableList<Image>)
+    {
+        icons.add(Image("/Mu-icon16.png"))
     }
 
     open fun createScene(tabs: TabPane) = Scene(tabs, 300.0, 250.0)
