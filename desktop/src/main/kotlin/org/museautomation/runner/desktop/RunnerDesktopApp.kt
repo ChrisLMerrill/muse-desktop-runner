@@ -40,7 +40,7 @@ open class RunnerDesktopApp
         })
     }
 
-    fun runJob(job: Job, input_list: Map<String, ValueSourceConfiguration>)
+    open fun runJob(job: Job, input_list: Map<String, ValueSourceConfiguration>)
     {
         thread(start = true) {
             val plugins = ArrayList<MusePlugin>()
@@ -50,14 +50,15 @@ open class RunnerDesktopApp
             plugins.add(element)
 
             val run = JobRun("r" + System.currentTimeMillis(), job.id, System.currentTimeMillis(), null, null, null, null)
-            JobRunner().run(run, plugins)
+            val runner = JobRunner()
+            runner.run(run, plugins)
             run.endTime = System.currentTimeMillis()
             JobRuns.save(run)
-            notifyUserJobComplete(run)
+            notifyUserJobComplete(run, runner)
         }
     }
 
-    fun shutdown()
+    open fun shutdown()
     {
         Platform.runLater(
         {
@@ -94,7 +95,7 @@ open class RunnerDesktopApp
         return MainWindow()
     }
 
-    private fun notifyUserJobComplete(run: JobRun)
+    protected open fun notifyUserJobComplete(run: JobRun, runner: JobRunner)
     {
         val success = run.success ?: return
 

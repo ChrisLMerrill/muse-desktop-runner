@@ -13,6 +13,7 @@ import org.museautomation.runner.settings.SettingsFolder
 import org.musetest.core.MuseTest
 import org.musetest.core.TestResult
 import org.musetest.core.context.ProjectExecutionContext
+import org.musetest.core.context.TestExecutionContext
 import org.musetest.core.events.matching.EventTypeMatcher
 import org.musetest.core.execution.BlockingThreadedTestRunner
 import org.musetest.core.plugins.MusePlugin
@@ -63,10 +64,10 @@ class JobRunner {
         val runner = BlockingThreadedTestRunner(ProjectExecutionContext(project), config)
         runner.runTest()
 
-        val test_context = config.context()
+        _test_context = config.context()
 
         // find result storage location
-        val event = test_context.eventLog.findFirstEvent(EventTypeMatcher(LocalStorageLocationEventType.TYPE_ID))
+        val event = _test_context.eventLog.findFirstEvent(EventTypeMatcher(LocalStorageLocationEventType.TYPE_ID))
         if (event != null) {
             LOG.info("task result storage location: " + LocalStorageLocationEventType().getTestPath(event))
             if (LocalStorageLocationEventType().getTestPath(event) != null)
@@ -74,7 +75,7 @@ class JobRunner {
         }
 
         // find the result
-        val result = TestResult.find(test_context)
+        val result = TestResult.find(_test_context)
         if (result == null)
             LOG.info("unable to evaluate the task result")
         else {
@@ -99,13 +100,21 @@ class JobRunner {
             }
         }
 
-        if (result.isPass)
+        if (result != null && result.isPass)
         {
             if (job.successMessageFormat == null)
                 run.message = "Completed successfully"
             else
                 run.message = MapFormat.format(job.successMessageFormat, JsonNodeMapBuilder(root).buildMap())
         }
+    }
+
+    private lateinit var _test_context: TestExecutionContext
+
+    @Suppress("unused")
+    fun getTextContext() : TestExecutionContext
+    {
+        return _test_context
     }
 
     companion object {
