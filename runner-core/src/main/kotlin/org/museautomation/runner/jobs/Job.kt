@@ -1,6 +1,6 @@
 package org.museautomation.runner.jobs
 
-import org.musetest.core.values.descriptor.SimpleSubsourceDescriptor
+import org.museautomation.core.values.descriptor.SimpleSubsourceDescriptor
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)

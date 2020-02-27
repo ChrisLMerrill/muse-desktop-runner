@@ -9,9 +9,9 @@ import org.museautomation.runner.jobs.Job
 import org.museautomation.runner.jobs.JobRun
 import org.museautomation.runner.jobs.JobRuns
 import org.museautomation.runner.plugins.InputInjectionPlugin
-import org.musetest.core.plugins.MusePlugin
-import org.musetest.core.project.SimpleProject
-import org.musetest.core.values.ValueSourceConfiguration
+import org.museautomation.core.plugins.MusePlugin
+import org.museautomation.core.project.SimpleProject
+import org.museautomation.core.values.ValueSourceConfiguration
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 

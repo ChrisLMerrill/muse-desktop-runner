@@ -10,17 +10,17 @@ import org.museautomation.runner.jobs.JobRuns
 import org.museautomation.runner.jobs.Jobs
 import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.runner.settings.SettingsFolder
-import org.musetest.core.MuseTest
-import org.musetest.core.TestResult
-import org.musetest.core.context.ProjectExecutionContext
-import org.musetest.core.context.TestExecutionContext
-import org.musetest.core.events.matching.EventTypeMatcher
-import org.musetest.core.execution.BlockingThreadedTestRunner
-import org.musetest.core.plugins.MusePlugin
-import org.musetest.core.project.SimpleProject
-import org.musetest.core.resource.storage.FolderIntoMemoryResourceStorage
-import org.musetest.core.resultstorage.LocalStorageLocationEventType
-import org.musetest.core.test.BasicTestConfiguration
+import org.museautomation.core.MuseTask
+import org.museautomation.core.TaskResult
+import org.museautomation.core.context.ProjectExecutionContext
+import org.museautomation.core.context.TaskExecutionContext
+import org.museautomation.core.events.matching.EventTypeMatcher
+import org.museautomation.core.execution.BlockingThreadedTaskRunner
+import org.museautomation.core.plugins.MusePlugin
+import org.museautomation.core.project.SimpleProject
+import org.museautomation.core.resource.storage.FolderIntoMemoryResourceStorage
+import org.museautomation.builtins.plugins.resultstorage.LocalStorageLocationEventType
+import org.museautomation.core.task.BasicTaskConfiguration
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -52,17 +52,17 @@ class JobRunner {
             return
         }
 
-        if (!(resource is MuseTest)) {
+        if (!(resource is MuseTask)) {
             LOG.error("Task ${job.taskId} is not a task. It is a " + resource::class.simpleName)
             return
         }
 
-        val config = BasicTestConfiguration(resource)
+        val config = BasicTaskConfiguration(resource)
         plugins.forEach {
             config.addPlugin(it)
         }
-        val runner = BlockingThreadedTestRunner(ProjectExecutionContext(project), config)
-        runner.runTest()
+        val runner = BlockingThreadedTaskRunner(ProjectExecutionContext(project), config)
+        runner.runTask()
 
         _test_context = config.context()
 
@@ -75,7 +75,7 @@ class JobRunner {
         }
 
         // find the result
-        val result = TestResult.find(_test_context)
+        val result = TaskResult.find(_test_context)
         if (result == null)
             LOG.info("unable to evaluate the task result")
         else {
@@ -109,10 +109,10 @@ class JobRunner {
         }
     }
 
-    private lateinit var _test_context: TestExecutionContext
+    private lateinit var _test_context: TaskExecutionContext
 
     @Suppress("unused")
-    fun getTextContext() : TestExecutionContext
+    fun getTextContext() : TaskExecutionContext
     {
         return _test_context
     }

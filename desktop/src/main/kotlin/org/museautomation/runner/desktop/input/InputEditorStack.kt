@@ -1,13 +1,13 @@
 package org.museautomation.runner.desktop.input
 
 import javafx.scene.Parent
-import org.musetest.core.MuseProject
-import org.musetest.core.values.ValueSourceConfiguration
-import org.musetest.core.values.descriptor.SubsourceDescriptor
-import org.musetest.ui.extend.actions.UndoStack
-import org.musetest.ui.extend.edit.EditInProgress
-import org.musetest.ui.extend.edit.stack.EditorStack
-import org.musetest.ui.valuesource.map.ValueSourceMapEditor
+import org.museautomation.core.MuseProject
+import org.museautomation.core.values.ValueSourceConfiguration
+import org.museautomation.core.values.descriptor.SubsourceDescriptor
+import org.museautomation.ui.extend.actions.UndoStack
+import org.museautomation.ui.extend.edit.EditInProgress
+import org.museautomation.ui.extend.edit.stack.EditorStack
+import org.museautomation.ui.valuesource.map.ValueSourceMapEditor
 
 class InputEditorStack(edit: EditInProgress<Any>, project: MuseProject, input_descriptors: List<SubsourceDescriptor>, input_list: Map<String, ValueSourceConfiguration>) : EditorStack(edit, UndoStack())
 {

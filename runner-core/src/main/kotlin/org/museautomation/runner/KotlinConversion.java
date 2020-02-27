@@ -1,8 +1,8 @@
 package org.museautomation.runner;
 
-import org.musetest.core.*;
-import org.musetest.core.project.*;
-import org.musetest.core.resource.*;
+import org.museautomation.core.*;
+import org.museautomation.core.project.*;
+import org.museautomation.core.resource.*;
 
 import java.util.*;
 

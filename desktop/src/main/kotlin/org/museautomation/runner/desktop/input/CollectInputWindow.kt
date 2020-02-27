@@ -7,10 +7,10 @@ import javafx.scene.control.Button
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.stage.Stage
-import org.musetest.core.MuseProject
-import org.musetest.core.values.ValueSourceConfiguration
-import org.musetest.core.values.descriptor.SubsourceDescriptor
-import org.musetest.ui.extend.edit.EditInProgress
+import org.museautomation.core.MuseProject
+import org.museautomation.core.values.ValueSourceConfiguration
+import org.museautomation.core.values.descriptor.SubsourceDescriptor
+import org.museautomation.ui.extend.edit.EditInProgress
 
 class CollectInputWindow(private val project: MuseProject, private val input_descriptors: List<SubsourceDescriptor>, private val input_list: Map<String, ValueSourceConfiguration>, private val listener: (inputs: Map<String, ValueSourceConfiguration>) -> Unit)
 {

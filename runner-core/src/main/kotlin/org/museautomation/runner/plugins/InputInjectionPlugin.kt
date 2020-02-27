@@ -1,8 +1,8 @@
 package org.museautomation.runner.plugins
 
-import org.musetest.core.MuseExecutionContext
-import org.musetest.core.plugins.MusePlugin
-import org.musetest.core.values.ValueSourceConfiguration
+import org.museautomation.core.MuseExecutionContext
+import org.museautomation.core.plugins.MusePlugin
+import org.museautomation.core.values.ValueSourceConfiguration
 
 class InputInjectionPlugin : MusePlugin
 {
