@@ -30,6 +30,7 @@ open class MainWindow : Application()
 
         stage.setOnCloseRequest(
         { event ->
+            close()
             APP.main_stage?.close()
             APP.main_stage = null
             event.consume()
@@ -78,6 +79,8 @@ open class MainWindow : Application()
     {
         return _first_tab
     }
+
+    protected open fun close() { }
 
     private lateinit var _stage : Stage
     private lateinit var _first_tab : Tab
