@@ -3,13 +3,7 @@ package org.museautomation.runner
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.TextNode
-import org.museautomation.runner.format.JsonNodeMapBuilder
-import org.museautomation.runner.format.MapFormat
-import org.museautomation.runner.jobs.JobRun
-import org.museautomation.runner.jobs.JobRuns
-import org.museautomation.runner.jobs.Jobs
-import org.museautomation.runner.projects.RegisteredProjects
-import org.museautomation.runner.settings.SettingsFolder
+import org.museautomation.builtins.plugins.resultstorage.LocalStorageLocationEventType
 import org.museautomation.core.MuseTask
 import org.museautomation.core.TaskResult
 import org.museautomation.core.context.ProjectExecutionContext
@@ -19,8 +13,13 @@ import org.museautomation.core.execution.BlockingThreadedTaskRunner
 import org.museautomation.core.plugins.MusePlugin
 import org.museautomation.core.project.SimpleProject
 import org.museautomation.core.resource.storage.FolderIntoMemoryResourceStorage
-import org.museautomation.builtins.plugins.resultstorage.LocalStorageLocationEventType
 import org.museautomation.core.task.BasicTaskConfiguration
+import org.museautomation.runner.format.JsonNodeMapBuilder
+import org.museautomation.runner.format.MapFormat
+import org.museautomation.runner.jobs.JobRun
+import org.museautomation.runner.jobs.JobRuns
+import org.museautomation.runner.jobs.Jobs
+import org.museautomation.runner.projects.RegisteredProjects
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
@@ -133,6 +132,6 @@ class JobRunner {
             JobRuns.save(run)
         }
 
-        private val LOG = LoggerFactory.getLogger(SettingsFolder::class.java)
+        private val LOG = LoggerFactory.getLogger(JobRunner::class.java)
     }
 }
