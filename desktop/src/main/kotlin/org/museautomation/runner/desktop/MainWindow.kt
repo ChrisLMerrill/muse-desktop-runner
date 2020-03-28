@@ -80,7 +80,7 @@ open class MainWindow : Application()
         return _first_tab
     }
 
-    protected open fun close() { }
+    open fun close() { }
 
     private lateinit var _stage : Stage
     private lateinit var _first_tab : Tab
