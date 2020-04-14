@@ -12,6 +12,9 @@ import org.museautomation.runner.plugins.InputInjectionPlugin
 import org.museautomation.core.plugins.MusePlugin
 import org.museautomation.core.project.SimpleProject
 import org.museautomation.core.values.ValueSourceConfiguration
+import org.museautomation.runner.jobs.Jobs
+import java.awt.MenuItem
+import java.awt.PopupMenu
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
@@ -27,17 +30,71 @@ open class RunnerDesktopApp
     {
         Platform.setImplicitExit(false)  // without this, the Platform shuts down when the first window closes...preventing creation of new windows
         TRAY.listener = (object: SystemTrayListener{
-            override fun exitRequested() = shutdown()
             override fun openRequested() = showWindow()
-            override fun runJobRequsted(job: Job)
-            {
+        })
+    }
+
+    open fun populateMenu(popup: PopupMenu): PopupMenu
+    {
+        popup.add(createOpenMenuItem())
+        popup.addSeparator()
+
+        val jobs = createJobMenuItems()
+        if (jobs.isNotEmpty())
+        {
+            for (item in jobs)
+                popup.add(item)
+            popup.addSeparator()
+        }
+
+        val admin = createAdminMenuItems()
+        if (admin.isNotEmpty())
+        {
+            for (item in admin)
+                popup.add(item)
+            popup.addSeparator()
+        }
+
+        popup.add(createExitMenuItem())
+        return popup
+    }
+
+    open fun createOpenMenuItem(): MenuItem
+    {
+        val open_item = MenuItem("Open")
+        open_item.addActionListener{ showWindow() }
+        return open_item
+    }
+
+    open fun createExitMenuItem(): MenuItem
+    {
+        val exit_item = MenuItem("Exit")
+        exit_item.addActionListener { shutdown() }
+        return exit_item
+    }
+
+    open fun createJobMenuItems(): List<MenuItem>
+    {
+        val jobs = mutableListOf<MenuItem>()
+        for (job in Jobs.asList())
+        {
+            val item = MenuItem("Run " + job.id)
+            item.addActionListener {
                 val input_initial_values = HashMap<String, ValueSourceConfiguration>()
                 for (descriptor in job.inputs)
                     input_initial_values[descriptor.name] = ValueSourceConfiguration.forValue(descriptor.defaultValueString)
                 val window = CollectInputWindow(SimpleProject(), job.inputs, input_initial_values, { input -> runJob(job, input) })
                 window.open()
             }
-        })
+            jobs.add(item)
+        }
+
+        return jobs
+    }
+
+    open fun createAdminMenuItems(): List<MenuItem>
+    {
+        return emptyList()
     }
 
     open fun runJob(job: Job, input_list: Map<String, ValueSourceConfiguration>)
@@ -125,6 +182,7 @@ open class RunnerDesktopApp
         fun main(args: Array<String>)
         {
             APP = RunnerDesktopApp()
+            TRAY.tray_icon.popupMenu = APP.populateMenu(PopupMenu())
             ARGS = args
             APP.launch()
         }
