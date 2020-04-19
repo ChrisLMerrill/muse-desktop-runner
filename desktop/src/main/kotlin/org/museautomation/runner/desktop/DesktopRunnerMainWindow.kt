@@ -1,8 +1,16 @@
 package org.museautomation.runner.desktop
 
+import javafx.application.Platform
+import javafx.collections.ObservableList
 import javafx.scene.Scene
 import javafx.scene.control.Label
+import javafx.scene.control.Tab
+import javafx.scene.control.TabPane
+import javafx.scene.image.Image
 import javafx.stage.Stage
+import org.museautomation.runner.jobs.JobRuns
+import org.museautomation.runner.jobs.Jobs
+import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.runner.settings.SettingsFiles
 import org.museautomation.runner.settings.StageSettings
 
@@ -13,10 +21,11 @@ import org.museautomation.runner.settings.StageSettings
  * 3. 'open' menu item is selcted
  */
 
-open class DesktopRunnerMainWindow(app: DesktopRunnerApp)
+open class DesktopRunnerMainWindow(val app: DesktopRunnerApp)
 {
     fun show(stage: Stage)
     {
+        _stage = stage
         stage.scene = getScene()
 
         val settings_name = "MainWindow-stage.json"
@@ -28,19 +37,84 @@ open class DesktopRunnerMainWindow(app: DesktopRunnerApp)
             stage.width = settings.width
             stage.height = settings.height
         }
-        stage.show()
 
-        stage.setOnCloseRequest {
+        stage.title = getTitle()
+        addWindowIcons(stage.icons)
+        stage.show()
+        stage.setOnCloseRequest {event ->
             settings.x = stage.x
             settings.y = stage.y
             settings.width = stage.width
             settings.height = stage.height
             SettingsFiles.FACTORY.storeSettings(settings_name, settings)
+
+            close()
+            stage.close()
+            event.consume()
+            app.mainWindowClosed()
         }
     }
 
     open fun getScene(): Scene
     {
-        return Scene(Label("Hello!"))
+        val tabs = TabPane()
+        createTabs().forEach { tab ->
+            tabs.tabs.add(tab)
+        }
+        tabs.selectionModel.select(getInitialTab())
+
+        val scene = Scene(tabs)
+        scene.stylesheets.add(javaClass.getResource("/runner.css").toExternalForm())
+        return scene
     }
+
+    open fun createTabs() : MutableList<Tab>
+    {
+        val tabs = mutableListOf<Tab>()
+
+        val projects_tab = Tab("Projects")
+        projects_tab.content = Label("There are ${RegisteredProjects.asList().size} projects")
+        tabs.add(projects_tab)
+        _first_tab = projects_tab
+
+        val jobs_tab = Tab("Jobs")
+        jobs_tab.content = Label("There are ${Jobs.asList().size} jobs")
+        tabs.add(jobs_tab)
+
+        val runs_tab = Tab("Runs")
+        runs_tab.content = Label("There are ${JobRuns.asList().size} runs")
+        tabs.add(runs_tab)
+
+        return tabs
+    }
+
+    open fun getInitialTab() : Tab
+    {
+        return _first_tab
+    }
+
+    open fun addWindowIcons(icons: ObservableList<Image>)
+    {
+        icons.add(Image("/Mu-icon16.png"))
+    }
+
+    open fun getTitle() = "Muse Runner"
+
+    open fun close()
+    {
+        _stage.close()
+    }
+
+    open fun show()
+    {
+        Platform.runLater({
+            _stage.show()
+            _stage.requestFocus()
+            _stage.toFront()
+            _stage.isIconified = false
+        })
+    }
+
+    private lateinit var _first_tab : Tab
+    private lateinit var _stage : Stage
 }
