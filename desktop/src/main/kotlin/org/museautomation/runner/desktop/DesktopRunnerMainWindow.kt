@@ -2,6 +2,7 @@ package org.museautomation.runner.desktop
 
 import javafx.application.Platform
 import javafx.collections.ObservableList
+import javafx.geometry.Dimension2D
 import javafx.scene.Scene
 import javafx.scene.control.Label
 import javafx.scene.control.Tab
@@ -26,7 +27,7 @@ open class DesktopRunnerMainWindow(val app: DesktopRunnerApp)
     fun show(stage: Stage)
     {
         _stage = stage
-        stage.scene = getScene()
+        stage.scene = createScene()
 
         val settings_name = "MainWindow-stage.json"
         val settings = SettingsFiles.FACTORY.getSettings(settings_name, StageSettings::class.java)
@@ -36,6 +37,12 @@ open class DesktopRunnerMainWindow(val app: DesktopRunnerApp)
             stage.y = settings.y
             stage.width = settings.width
             stage.height = settings.height
+        }
+        else
+        {
+            val size = getDefaultSize()
+            stage.width = size.width
+            stage.width = size.height
         }
 
         stage.title = getTitle()
@@ -55,7 +62,12 @@ open class DesktopRunnerMainWindow(val app: DesktopRunnerApp)
         }
     }
 
-    open fun getScene(): Scene
+    open fun getDefaultSize(): Dimension2D
+    {
+        return Dimension2D(300.0, 500.0)
+    }
+
+    open fun createScene(): Scene
     {
         val tabs = TabPane()
         createTabs().forEach { tab ->

@@ -40,7 +40,7 @@ open class DesktopRunnerApp: Application()
         return DesktopRunnerTrayUI(this, createMenuProvider())
     }
 
-    private fun createMenuProvider(): DesktopRunnerTrayMenuProvider
+    open fun createMenuProvider(): DesktopRunnerTrayMenuProvider
     {
         return DesktopRunnerTrayMenuProvider(this)
     }
@@ -74,7 +74,7 @@ open class DesktopRunnerApp: Application()
          _main_window = null
     }
 
-    fun exitRequested()
+    open fun exitRequested()
     {
         Platform.runLater(
         {

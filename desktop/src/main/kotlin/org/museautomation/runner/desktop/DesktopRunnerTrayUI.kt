@@ -6,7 +6,7 @@ import java.awt.TrayIcon
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 
-class DesktopRunnerTrayUI(app: DesktopRunnerApp, menu_provider: DesktopRunnerTrayMenuProvider)
+open class DesktopRunnerTrayUI(app: DesktopRunnerApp, menu_provider: DesktopRunnerTrayMenuProvider)
 {
     lateinit var _tray_icon: TrayIcon
 
@@ -16,7 +16,7 @@ class DesktopRunnerTrayUI(app: DesktopRunnerApp, menu_provider: DesktopRunnerTra
             println("SystemTray is not supported :(")
         else
         {
-            _tray_icon = DesktopRunnerTrayIcon(Toolkit.getDefaultToolkit().getImage(javaClass.getResource("/Mu-icon16.png")), menu_provider)
+            _tray_icon = DesktopRunnerTrayIcon(getIcon(), menu_provider)
             _tray_icon.addMouseListener(TrayIconMouseListener(app))  // for single-click-show support
             _tray_icon.addActionListener { app.showMainWindow() }
             val tray = SystemTray.getSystemTray()
@@ -24,7 +24,9 @@ class DesktopRunnerTrayUI(app: DesktopRunnerApp, menu_provider: DesktopRunnerTra
         }
     }
 
-    fun shutdown()
+    open fun getIcon() = Toolkit.getDefaultToolkit().getImage(javaClass.getResource("/Mu-icon16.png"))
+
+    open fun shutdown()
     {
         SystemTray.getSystemTray().remove(_tray_icon)
     }

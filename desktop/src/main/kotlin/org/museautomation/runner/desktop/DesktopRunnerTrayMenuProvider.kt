@@ -14,7 +14,7 @@ import java.awt.MenuItem
 import java.awt.PopupMenu
 import kotlin.concurrent.thread
 
-open class DesktopRunnerTrayMenuProvider(val app: DesktopRunnerApp)
+open class DesktopRunnerTrayMenuProvider(open val app: DesktopRunnerApp)
 {
     open fun createMenu(): PopupMenu
     {
