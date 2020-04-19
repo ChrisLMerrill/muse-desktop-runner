@@ -29,6 +29,11 @@ class DesktopRunnerTrayUI(app: DesktopRunnerApp, menu_provider: DesktopRunnerTra
         SystemTray.getSystemTray().remove(_tray_icon)
     }
 
+    fun showNotification(title: String, message: String, success: Boolean)
+    {
+        _tray_icon.displayMessage(title, message, if (success) TrayIcon.MessageType.INFO else TrayIcon.MessageType.ERROR)
+    }
+
     private inner class TrayIconMouseListener(val app: DesktopRunnerApp) : MouseAdapter()
     {
         // show the main window on single-mouse click

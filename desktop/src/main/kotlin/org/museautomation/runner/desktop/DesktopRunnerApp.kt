@@ -84,6 +84,13 @@ open class DesktopRunnerApp: Application()
         })
     }
 
+    /* Maybe this will be needed for launching from the updater?
+    fun launch()
+    {
+        launch(this::class.java, *RunnerDesktopApp.ARGS)
+    }
+    */
+
     var _main_window : DesktopRunnerMainWindow? = null
     lateinit var _tray_ui : DesktopRunnerTrayUI
 
