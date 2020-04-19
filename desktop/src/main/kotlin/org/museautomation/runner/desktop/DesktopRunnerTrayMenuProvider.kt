@@ -110,6 +110,6 @@ open class DesktopRunnerTrayMenuProvider(val app: DesktopRunnerApp)
         if (run.message != null)
             message += ": " + run.message
 
-        app._tray_ui.showNotification("Job completed", message, success)
+        app.getTrayUI().showNotification("Job completed", message, success)
     }
 }

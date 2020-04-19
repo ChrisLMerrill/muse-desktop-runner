@@ -7,7 +7,7 @@ import org.museautomation.runner.settings.SettingsFiles
 import java.io.File
 import kotlin.system.exitProcess
 
-@Suppress("LeakingThis")
+@Suppress("LeakingThis")  // silence warnings from IDE about calling instance methods in the constructor.
 open class DesktopRunnerApp: Application()
 {
     init
@@ -84,15 +84,20 @@ open class DesktopRunnerApp: Application()
         })
     }
 
+    fun getTrayUI(): DesktopRunnerTrayUI
+    {
+        return _tray_ui
+    }
+
     /* Maybe this will be needed for launching from the updater?
-    fun launch()
+    open fun launch()
     {
         launch(this::class.java, *RunnerDesktopApp.ARGS)
     }
     */
 
-    var _main_window : DesktopRunnerMainWindow? = null
-    lateinit var _tray_ui : DesktopRunnerTrayUI
+    private var _main_window : DesktopRunnerMainWindow? = null
+    private lateinit var _tray_ui : DesktopRunnerTrayUI
 
     companion object
     {
