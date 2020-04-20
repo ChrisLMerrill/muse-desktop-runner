@@ -1,6 +1,8 @@
 package org.museautomation.runner.projects
 
-import org.junit.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Test
 import org.museautomation.runner.settings.SettingsFolder
 
 import java.io.*
@@ -14,19 +16,19 @@ class RegisteredProjectsTests {
         // point the settings folder to unit test data
         SettingsFolder.BASE_FOLDER = File(javaClass.classLoader.getResource("home")!!.file)
 
-        Assert.assertEquals(2, RegisteredProjects.asList().size.toLong())
+        assertEquals(2, RegisteredProjects.asList().size.toLong())
 
         val p1 = RegisteredProjects.asList().get(0)
-        Assert.assertEquals("p1", p1.id)
-        Assert.assertEquals("path1/path2/folder", p1.path)
-        Assert.assertEquals("Project #1", p1.name)
+        assertEquals("p1", p1.id)
+        assertEquals("path1/path2/folder", p1.path)
+        assertEquals("Project #1", p1.name)
 
         val p2 = RegisteredProjects.asList().get(1)
-        Assert.assertEquals("p2", p2.id)
-        Assert.assertEquals("path/to/project", p2.path)
-        Assert.assertEquals("My second project", p2.name)
+        assertEquals("p2", p2.id)
+        assertEquals("path/to/project", p2.path)
+        assertEquals("My second project", p2.name)
 
-        Assert.assertSame(p1, RegisteredProjects.get("p1"))
-        Assert.assertSame(p2, RegisteredProjects.get("p2"))
+        assertSame(p1, RegisteredProjects.get("p1"))
+        assertSame(p2, RegisteredProjects.get("p2"))
     }
 }

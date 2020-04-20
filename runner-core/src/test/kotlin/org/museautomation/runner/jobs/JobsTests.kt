@@ -1,6 +1,8 @@
 package org.museautomation.runner.jobs
 
-import org.junit.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertSame
+import org.junit.jupiter.api.Test
 import org.museautomation.runner.settings.SettingsFolder
 
 import java.io.*
@@ -14,19 +16,19 @@ class JobsTests {
         // point the settings folder to unit test data
         SettingsFolder.BASE_FOLDER = File(javaClass.classLoader.getResource("home")!!.file)
 
-        Assert.assertEquals(2, Jobs.asList().size.toLong())
+        assertEquals(2, Jobs.asList().size.toLong())
 
         val j1 = Jobs.asList().get(0)
-        Assert.assertEquals("j1", j1.id)
-        Assert.assertEquals("project1", j1.projectId)
-        Assert.assertEquals("login-and-buy", j1.taskId)
+        assertEquals("j1", j1.id)
+        assertEquals("project1", j1.projectId)
+        assertEquals("login-and-buy", j1.taskId)
 
         val j2 = Jobs.asList().get(1)
-        Assert.assertEquals("j2", j2.id)
-        Assert.assertEquals("project1", j2.projectId)
-        Assert.assertEquals("login-generate-report", j2.taskId)
+        assertEquals("j2", j2.id)
+        assertEquals("project1", j2.projectId)
+        assertEquals("login-generate-report", j2.taskId)
 
-        Assert.assertSame(j1, Jobs.get("j1"))
-        Assert.assertSame(j2, Jobs.get("j2"))
+        assertSame(j1, Jobs.get("j1"))
+        assertSame(j2, Jobs.get("j2"))
     }
 }
