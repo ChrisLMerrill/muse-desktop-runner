@@ -17,7 +17,7 @@ abstract class SettingsFolder {
     @Suppress("SameParameterValue")
     protected fun loadFiles(path: String, type: Class<*>, custom_mapper: ObjectMapper?) {
         val folder = File(BASE_FOLDER, path)
-        if (!folder.exists())
+        if (!folder.exists() && !folder.mkdir())
             return
 
         val files = folder.listFiles()
