@@ -5,6 +5,7 @@ import net.christophermerrill.testfx.ComponentTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.museautomation.runner.projects.*
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
 /**
@@ -116,8 +117,22 @@ class RegisteredProjectEditorTests: ComponentTest()
         assertEquals("my download url", new_project.download_settings?.url)
     }
 
+    @Test
+    fun cancelEdit()
+    {
+        setupLocalProject()
+        setupSaveListener()
+        waitForUiEvents()
+
+        clickOn(id(RegisteredProjectEditor.CANCEL_BUTTON_ID))
+        waitForUiEvents()
+        assertTrue(_cancelled.get())
+    }
+
+
     private lateinit var _editor: RegisteredProjectEditor
     private lateinit var _saved_project: AtomicReference<RegisteredProject>
+    private lateinit var _cancelled: AtomicBoolean
 
     private fun setupLocalProject(): RegisteredProject
     {
@@ -142,8 +157,9 @@ class RegisteredProjectEditorTests: ComponentTest()
                 _saved_project.set(project)
             }
 
-            override fun cancelPressed(project: RegisteredProject)
+            override fun cancelPressed()
             {
+                _cancelled.set(true)
             }
         })
     }
@@ -152,6 +168,7 @@ class RegisteredProjectEditorTests: ComponentTest()
     {
         _editor = RegisteredProjectEditor()
         _saved_project = AtomicReference<RegisteredProject>()
+        _cancelled = AtomicBoolean(false)
         RegisteredProjects.clear()
         return _editor.getNode()
     }

@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.layout.GridPane
+import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import org.museautomation.runner.projects.DownloadableProjectSettings
 import org.museautomation.runner.projects.RegisteredProject
@@ -31,7 +32,7 @@ class RegisteredProjectEditor
     interface ActionListener
     {
         fun savePressed(project: RegisteredProject)
-        fun cancelPressed(project: RegisteredProject)
+        fun cancelPressed()
     }
 
     fun setOnAction(listener: ActionListener)
@@ -105,6 +106,7 @@ class RegisteredProjectEditor
     private val _download_field = CheckBox()
     private val _url_field = TextField()
     private val _save_button = Button("Save")
+    private val _cancel_button = Button("Cancel")
 
     init
     {
@@ -144,11 +146,17 @@ class RegisteredProjectEditor
         _grid.add(_url_field, 1, row)
 
         row++
-        GridPane.setHgrow(_save_button, Priority.ALWAYS)
-        GridPane.setHalignment(_save_button, HPos.RIGHT)
-        _grid.add(_save_button, 1, row)
+        val buttons = HBox()
+        GridPane.setHgrow(buttons, Priority.ALWAYS)
+        GridPane.setHalignment(buttons, HPos.RIGHT)
+        _grid.add(buttons, 1, row)
+
         _save_button.id = SAVE_BUTTON_ID
         _save_button.setOnAction { _listener?.savePressed(getProject()) }
+        buttons.children.add(_save_button)
+        _cancel_button.id = CANCEL_BUTTON_ID
+        _cancel_button.setOnAction { _listener?.cancelPressed() }
+        buttons.children.add(_cancel_button)
     }
 
     companion object
@@ -163,5 +171,6 @@ class RegisteredProjectEditor
         const val URL_FIELD_ID = "omrdp-rep-url"
 
         const val SAVE_BUTTON_ID = "omrdp-rep-save"
+        const val CANCEL_BUTTON_ID = "omrdp-rep-cancel"
     }
 }
