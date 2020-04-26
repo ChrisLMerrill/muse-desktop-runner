@@ -39,10 +39,13 @@ class ProjectListTable
     }
 
     val date_format = SimpleDateFormat("MMM dd")
-    private val _table = TableView<ProjectRow>()
+    private var _table: TableView<ProjectRow>
 
     init
     {
+        _table = TableView<ProjectRow>()
+        _table.id = TABLE_ID
+
         val name_column = TableColumn<ProjectRow, String>("Project Name")
         name_column.setCellValueFactory(PropertyValueFactory("name"))
         _table.columns.add(name_column)

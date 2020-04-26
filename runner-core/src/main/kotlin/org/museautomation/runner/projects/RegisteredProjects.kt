@@ -1,3 +1,4 @@
+
 package org.museautomation.runner.projects
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -23,6 +24,11 @@ object RegisteredProjects : SettingsFolder()
     private fun load()
     {
         loadFiles(FOLDER, RegisteredProject::class.java, mapper)
+    }
+
+    fun add(project: RegisteredProject)
+    {
+        saveFile(project, FOLDER, project.id + ".json", mapper)
     }
 
     fun clear()

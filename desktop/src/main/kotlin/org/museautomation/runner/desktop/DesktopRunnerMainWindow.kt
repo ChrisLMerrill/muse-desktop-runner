@@ -9,6 +9,7 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
 import javafx.stage.Stage
+import org.museautomation.runner.desktop.projects.ProjectsTab
 import org.museautomation.runner.jobs.JobRuns
 import org.museautomation.runner.jobs.Jobs
 import org.museautomation.runner.projects.RegisteredProjects
@@ -22,7 +23,7 @@ import org.museautomation.runner.settings.StageSettings
  * 3. 'open' menu item is selcted
  */
 
-open class DesktopRunnerMainWindow(val app: DesktopRunnerApp)
+open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
 {
     fun show(stage: Stage)
     {
@@ -84,10 +85,10 @@ open class DesktopRunnerMainWindow(val app: DesktopRunnerApp)
     {
         val tabs = mutableListOf<Tab>()
 
-        val projects_tab = Tab("Projects")
-        projects_tab.content = Label("There are ${RegisteredProjects.asList().size} projects")
-        tabs.add(projects_tab)
-        _first_tab = projects_tab
+        val projects_tab = ProjectsTab()
+        projects_tab.setProjects(RegisteredProjects.asList())
+        tabs.add(projects_tab.getTab())
+        _first_tab = projects_tab.getTab()
 
         val jobs_tab = Tab("Jobs")
         jobs_tab.content = Label("There are ${Jobs.asList().size} jobs")
