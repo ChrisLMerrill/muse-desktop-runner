@@ -51,6 +51,7 @@ class RegisteredProjectEditor
             {
                 _name_field.text = ""
                 _id_field.text = ""
+                _id_field.disableProperty().set(false)
                 _path_field.text = ""
                 _download_field.selectedProperty().set(false)
                 _url_field.disableProperty().set(true)
@@ -60,6 +61,7 @@ class RegisteredProjectEditor
             {
                 _name_field.text = project.name
                 _id_field.text = project.id
+                _id_field.disableProperty().set(true)
                 _path_field.text = project.path
 
                 val downloaded = project.download_settings

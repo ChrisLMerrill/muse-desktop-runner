@@ -46,6 +46,7 @@ class RegisteredProjectEditorTests: ComponentTest()
     {
         _editor.setProject(null)
         setupSaveListener()
+        assertFalse(isDisabled(id(RegisteredProjectEditor.ID_FIELD_ID)))
 
         fillAndSaveLocalProject(this, "Project 2", "project-2", "/path/to/project2")
 
@@ -61,6 +62,7 @@ class RegisteredProjectEditorTests: ComponentTest()
     {
         _editor.setProject(null)
         setupSaveListener()
+        assertFalse(isDisabled(id(RegisteredProjectEditor.ID_FIELD_ID)))
 
         fillAndSaveDownloadedProject(this, "Project 2", "project-2", "/path/to/project2", "my download url")
 
@@ -78,14 +80,14 @@ class RegisteredProjectEditorTests: ComponentTest()
         val project = setupLocalProject()
         setupSaveListener()
         waitForUiEvents()
+        assertTrue(isDisabled(id(RegisteredProjectEditor.ID_FIELD_ID)))
 
-        _editor.setProject(project)
-        fillAndSaveLocalProject(this, "Project 2", "project-2", "/path/to/project2")
+        fillAndSaveLocalProject(this, "Project 2", null, "/path/to/project2")
 
         assertSame(project, _saved_project.get())
         val new_project = _saved_project.get()
-        assertEquals("project-2", new_project.id)
         assertEquals("Project 2", new_project.name)
+        assertEquals("project1", new_project.id)  // not editable
         assertEquals("/path/to/project2", new_project.path)
     }
 
@@ -95,6 +97,7 @@ class RegisteredProjectEditorTests: ComponentTest()
         val project = setupDownloadedProject()
         setupSaveListener()
         waitForUiEvents()
+        assertTrue(isDisabled(id(RegisteredProjectEditor.ID_FIELD_ID)))
 
         fillField(id(RegisteredProjectEditor.URL_FIELD_ID), "my download url")
         clickOn(id(RegisteredProjectEditor.SAVE_BUTTON_ID))
@@ -162,14 +165,15 @@ class RegisteredProjectEditorTests: ComponentTest()
 
     companion object
     {
-        private fun fillLocalProject(component: ComponentTest, name: String, id: String, path: String)
+        private fun fillLocalProject(component: ComponentTest, name: String, id: String?, path: String)
         {
             component.fillField(component.id(RegisteredProjectEditor.NAME_FIELD_ID), name)
-            component.fillField(component.id(RegisteredProjectEditor.ID_FIELD_ID), id)
+            if (id != null)
+                component.fillField(component.id(RegisteredProjectEditor.ID_FIELD_ID), id)
             component.fillField(component.id(RegisteredProjectEditor.PATH_FIELD_ID), path)
         }
 
-        fun fillAndSaveLocalProject(component: ComponentTest, name: String, id: String, path: String)
+        fun fillAndSaveLocalProject(component: ComponentTest, name: String, id: String?, path: String)
         {
             fillLocalProject(component, name, id, path)
             component.clickOn(component.id(RegisteredProjectEditor.SAVE_BUTTON_ID))
