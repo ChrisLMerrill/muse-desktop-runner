@@ -16,7 +16,7 @@ abstract class SettingsFolder {
 
     @Suppress("SameParameterValue")
     protected fun loadFiles(path: String, type: Class<*>, custom_mapper: ObjectMapper?) {
-        val folder = File(BASE_FOLDER, path)
+        val folder = getFolder(path)
         if (!folder.exists() && !folder.mkdir())
             return
 
@@ -38,8 +38,13 @@ abstract class SettingsFolder {
         }
     }
 
+    protected fun getFolder(path: String): File
+    {
+        return File(BASE_FOLDER, path)
+    }
+
     protected fun saveFile(settings: Any, path: String, filename: String, custom_mapper: ObjectMapper?) {
-        val folder = File(BASE_FOLDER, path)
+        val folder = getFolder(path)
         if (!folder.exists())
             if (!folder.mkdirs())
                 throw Exception("Unable to create settings folder: " + folder.absolutePath)

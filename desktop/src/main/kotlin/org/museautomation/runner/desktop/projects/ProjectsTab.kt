@@ -1,14 +1,18 @@
 package org.museautomation.runner.desktop.projects
 
 import javafx.geometry.Insets
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
 import javafx.scene.control.Tab
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
+import javafx.stage.StageStyle
 import org.museautomation.runner.projects.RegisteredProject
 import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.ui.extend.glyphs.Glyphs
+import org.museautomation.ui.extend.javafx.Windows
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -57,6 +61,7 @@ class ProjectsTab
 
         val edit_enabled = enabled && _selected_project != null
         _edit_button.disableProperty().set(!edit_enabled)
+        _delete_button.disableProperty().set(!edit_enabled)
     }
 
     private val _tab = Tab("Projects")
@@ -65,6 +70,7 @@ class ProjectsTab
     private val _outer = BorderPane()
     private val _add_button = Button("Add")
     private val _edit_button = Button("Edit")
+    private val _delete_button = Button("Delete")
     private var _selected_project: RegisteredProject? = null
     private var _editing_project: RegisteredProject? = null
 
@@ -99,6 +105,26 @@ class ProjectsTab
             updateButtonStates(false)
         }
 
+        _delete_button.id = EDIT_BUTTON_ID
+        _delete_button.graphic = Glyphs.create("FA:MINUS_CIRCLE", Color.DARKRED)
+        _delete_button.disableProperty().set(true) // disabled until selection made
+        button_area.children.add(_delete_button)
+        _delete_button.setOnAction {
+            val dialog = Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete ${_selected_project?.name} ?")
+            dialog.title = "Confirm delete"
+            dialog.headerText = null
+            dialog.initStyle(StageStyle.UTILITY)
+            dialog.initOwner(_table.getNode().scene.window)
+            val result = dialog.showAndWait()
+            if (result.isPresent && result.get() == ButtonType.OK)
+            {
+                RegisteredProjects.delete(_selected_project!!)
+                _table.removeProject(_selected_project!!)
+                _selected_project = null
+                updateButtonStates(true)
+            }
+        }
+
         _editor.setOnAction(object : RegisteredProjectEditor.ActionListener {
             override fun savePressed(project: RegisteredProject)
             {
@@ -122,6 +148,7 @@ class ProjectsTab
             {
                 _selected_project = project
                 _edit_button.disableProperty().set(project == null)
+                _delete_button.disableProperty().set(project == null)
             }
         })
     }

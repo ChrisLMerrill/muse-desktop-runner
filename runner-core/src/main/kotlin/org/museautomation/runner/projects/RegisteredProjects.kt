@@ -4,6 +4,7 @@ package org.museautomation.runner.projects
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.museautomation.runner.settings.SettingsFolder
+import java.io.File
 
 import java.util.*
 
@@ -63,5 +64,12 @@ object RegisteredProjects : SettingsFolder()
             settings.id = name
             _projects.add(settings)
         }
+    }
+
+    fun delete(project: RegisteredProject)
+    {
+        _projects.remove(project)
+        val file = File(getFolder(FOLDER), project.id + ".json")
+        file.delete()
     }
 }

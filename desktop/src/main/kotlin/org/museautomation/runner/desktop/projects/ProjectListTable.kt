@@ -43,6 +43,17 @@ class ProjectListTable
         _listener = listener
     }
 
+    fun removeProject(project: RegisteredProject)
+    {
+        for (row in _table.items)
+            if (row.project === project)
+            {
+                _table.items.remove(row)
+                _table.selectionModel.clearSelection()
+                break
+            }
+    }
+
     val date_format = SimpleDateFormat("MMM dd")
     private var _table: TableView<ProjectRow>
     private var _listener: SelectionListener? = null
