@@ -12,7 +12,6 @@ import javafx.stage.StageStyle
 import org.museautomation.runner.projects.RegisteredProject
 import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.ui.extend.glyphs.Glyphs
-import org.museautomation.ui.extend.javafx.Windows
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -91,6 +90,8 @@ class ProjectsTab
         button_area.children.add(_add_button)
         _add_button.setOnAction {
             _outer.bottom = _editor.getNode()
+            _editing_project = null
+            _editor.setProject(null)
             updateButtonStates(false)
         }
 

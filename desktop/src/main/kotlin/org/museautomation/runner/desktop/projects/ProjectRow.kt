@@ -4,15 +4,20 @@ import org.museautomation.runner.projects.RegisteredProject
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-class ProjectRow(val table: ProjectListTable, val project: RegisteredProject)
+class ProjectRow(private val table: ProjectListTable, val project: RegisteredProject)
 {
-    var name = ""
-    var version = ""
-    var date = ""
+    private var name = ""
+    private var version = ""
+    private var date = ""
+    private val updateState: RowUpdateState
 
     init
     {
         update()
+        updateState = if (project.download_settings == null)
+            RowUpdateState(ProjectUpdateState.Unavailable, null, null, this)
+        else
+            RowUpdateState(ProjectUpdateState.Start, null, null, this)
     }
 
     fun update()
@@ -30,4 +35,16 @@ class ProjectRow(val table: ProjectListTable, val project: RegisteredProject)
             date = table.date_format.format(latest.date)
         }
     }
+}
+
+class RowUpdateState(val update_state: ProjectUpdateState, val message: String?, val available_version: Int?, val row: ProjectRow)
+
+enum class ProjectUpdateState
+{
+    Unavailable,
+    Start,
+    Checking,
+    ReadyToUpdate,
+    Updating,
+    Message
 }
