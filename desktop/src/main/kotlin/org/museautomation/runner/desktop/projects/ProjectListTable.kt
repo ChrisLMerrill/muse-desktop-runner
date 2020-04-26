@@ -38,8 +38,14 @@ class ProjectListTable
         _table.refresh()
     }
 
+    fun addSelectionListener(listener: SelectionListener)
+    {
+        _listener = listener
+    }
+
     val date_format = SimpleDateFormat("MMM dd")
     private var _table: TableView<ProjectRow>
+    private var _listener: SelectionListener? = null
 
     init
     {
@@ -57,10 +63,23 @@ class ProjectListTable
         val date_column = TableColumn<ProjectRow, String>("Date")
         date_column.setCellValueFactory(PropertyValueFactory("date"))
         _table.columns.add(date_column)
+
+        _table.selectionModel.selectedItemProperty().addListener(
+        { _, _, new_row ->
+            val listener = _listener
+            if (listener != null)
+                listener.selectionChanged(new_row?.project)
+        })
     }
 
     companion object
     {
         const val TABLE_ID = "omrdp.plt.id"
     }
+
+    interface SelectionListener
+    {
+        fun selectionChanged(project: RegisteredProject?)
+    }
+
 }

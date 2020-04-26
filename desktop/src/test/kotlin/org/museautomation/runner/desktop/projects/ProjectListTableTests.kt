@@ -1,15 +1,16 @@
 package org.museautomation.runner.desktop.projects
 
 import javafx.scene.Node
+import javafx.scene.input.KeyCode
 import net.christophermerrill.testfx.ComponentTest
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.museautomation.runner.projects.DownloadableProject
 import org.museautomation.runner.projects.DownloadableProjectSettings
 import org.museautomation.runner.projects.DownloadableProjectVersion
 import org.museautomation.runner.projects.RegisteredProject
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -72,7 +73,31 @@ class ProjectListTableTests: ComponentTest()
         assertFalse(exists(old_name))
         assertTrue(exists(new_name))
     }
-    
+
+    @Test
+    fun selectionChanged()
+    {
+        val local = setupLocalProject()
+        val download = setupDownloadedProject()
+        _table.setProjects(mutableListOf(local, download))
+        waitForUiEvents()
+
+        val selected = AtomicReference<RegisteredProject>()
+        _table.addSelectionListener(object : ProjectListTable.SelectionListener {
+            override fun selectionChanged(project: RegisteredProject?)
+            {
+                selected.set(project)
+            }
+        })
+
+        clickOn(local.name)
+        assertEquals(local, selected.get())
+        clickOn(download.name)
+        assertEquals(download, selected.get())
+        press(KeyCode.SHIFT).clickOn(download.name).release(KeyCode.SHIFT)
+        assertNull(selected.get())
+    }
+
     @Test
     fun pressProjectEditButton()
     {
