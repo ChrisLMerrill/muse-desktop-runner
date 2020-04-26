@@ -6,10 +6,17 @@ import org.museautomation.runner.projects.RegisteredProject
  */
 class ProjectRow(private val table: ProjectListTable, val project: RegisteredProject)
 {
-    private var name = ""
-    private var version = ""
-    private var date = ""
-    private val updateState: RowUpdateState
+    @Suppress("MemberVisibilityCanBePrivate") // used via reflection by table columns
+    var name = ""
+
+    @Suppress("MemberVisibilityCanBePrivate") // used via reflection by table columns
+    var version = ""
+
+    @Suppress("MemberVisibilityCanBePrivate") // used via reflection by table columns
+    var date = ""
+
+    @Suppress("MemberVisibilityCanBePrivate") // used via reflection by table columns
+    val updateState: RowUpdateState
 
     init
     {
