@@ -47,10 +47,7 @@ class RegisteredProjectEditorTests: ComponentTest()
         _editor.setProject(null)
         setupSaveListener()
 
-        fillField(id(RegisteredProjectEditor.NAME_FIELD_ID), "Project 2")
-        fillField(id(RegisteredProjectEditor.ID_FIELD_ID), "project-2")
-        fillField(id(RegisteredProjectEditor.PATH_FIELD_ID), "/path/to/project2")
-        clickOn(id(RegisteredProjectEditor.SAVE_BUTTON_ID))
+        fillAndSaveLocalProject(this, "Project 2", "project-2", "/path/to/project2")
 
         assertNotNull(_saved_project.get())
         val new_project = _saved_project.get()
@@ -65,14 +62,7 @@ class RegisteredProjectEditorTests: ComponentTest()
         _editor.setProject(null)
         setupSaveListener()
 
-        fillField(id(RegisteredProjectEditor.NAME_FIELD_ID), "Project 2")
-        fillField(id(RegisteredProjectEditor.ID_FIELD_ID), "project-2")
-        fillField(id(RegisteredProjectEditor.PATH_FIELD_ID), "/path/to/project2")
-        clickOn(id(RegisteredProjectEditor.DOWNLOAD_CHECKBOX_ID))
-        fillField(id(RegisteredProjectEditor.URL_FIELD_ID), "my download url")
-
-
-        clickOn(id(RegisteredProjectEditor.SAVE_BUTTON_ID))
+        fillAndSaveDownloadedProject(this, "Project 2", "project-2", "/path/to/project2", "my download url")
 
         assertNotNull(_saved_project.get())
         val new_project = _saved_project.get()
@@ -90,10 +80,7 @@ class RegisteredProjectEditorTests: ComponentTest()
         waitForUiEvents()
 
         _editor.setProject(project)
-        fillField(id(RegisteredProjectEditor.NAME_FIELD_ID), "Project 2")
-        fillField(id(RegisteredProjectEditor.ID_FIELD_ID), "project-2")
-        fillField(id(RegisteredProjectEditor.PATH_FIELD_ID), "/path/to/project2")
-        clickOn(id(RegisteredProjectEditor.SAVE_BUTTON_ID))
+        fillAndSaveLocalProject(this, "Project 2", "project-2", "/path/to/project2")
 
         assertSame(project, _saved_project.get())
         val new_project = _saved_project.get()
@@ -171,5 +158,29 @@ class RegisteredProjectEditorTests: ComponentTest()
         _cancelled = AtomicBoolean(false)
         RegisteredProjects.clear()
         return _editor.getNode()
+    }
+
+    companion object
+    {
+        private fun fillLocalProject(component: ComponentTest, name: String, id: String, path: String)
+        {
+            component.fillField(component.id(RegisteredProjectEditor.NAME_FIELD_ID), name)
+            component.fillField(component.id(RegisteredProjectEditor.ID_FIELD_ID), id)
+            component.fillField(component.id(RegisteredProjectEditor.PATH_FIELD_ID), path)
+        }
+
+        fun fillAndSaveLocalProject(component: ComponentTest, name: String, id: String, path: String)
+        {
+            fillLocalProject(component, name, id, path)
+            component.clickOn(component.id(RegisteredProjectEditor.SAVE_BUTTON_ID))
+        }
+
+        fun fillAndSaveDownloadedProject(component: ComponentTest, name: String, id: String, path: String, url: String)
+        {
+            fillLocalProject(component, name, id, path)
+            component.clickOn(component.id(RegisteredProjectEditor.DOWNLOAD_CHECKBOX_ID))
+            component.fillField(component.id(RegisteredProjectEditor.URL_FIELD_ID), url)
+            component.clickOn(component.id(RegisteredProjectEditor.SAVE_BUTTON_ID))
+        }
     }
 }
