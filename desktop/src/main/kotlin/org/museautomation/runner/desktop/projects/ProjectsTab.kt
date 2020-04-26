@@ -35,7 +35,28 @@ class ProjectsTab
             RegisteredProjects.add(project)
         }
         _outer.bottom = null
+        updateButtonStates(true)
         _add_button.disableProperty().set(false)
+    }
+
+    private fun editFinished(project: RegisteredProject?)
+    {
+        if (project != null)
+        {
+            _table.update(project)
+            RegisteredProjects.save(project)
+        }
+        _outer.bottom = null
+        updateButtonStates(true)
+        _add_button.disableProperty().set(false)
+    }
+
+    private fun updateButtonStates(enabled: Boolean)
+    {
+        _add_button.disableProperty().set(!enabled)
+
+        val edit_enabled = enabled && _selected_project != null
+        _edit_button.disableProperty().set(!edit_enabled)
     }
 
     private val _tab = Tab("Projects")
@@ -43,6 +64,9 @@ class ProjectsTab
     private val _editor = RegisteredProjectEditor()
     private val _outer = BorderPane()
     private val _add_button = Button("Add")
+    private val _edit_button = Button("Edit")
+    private var _selected_project: RegisteredProject? = null
+    private var _editing_project: RegisteredProject? = null
 
     init
     {
@@ -52,6 +76,7 @@ class ProjectsTab
         val inner = BorderPane()
         _outer.center = inner
         inner.center = _table.getNode()
+
         val button_area = HBox()
         button_area.padding = Insets(5.0)
         inner.bottom = button_area
@@ -60,18 +85,43 @@ class ProjectsTab
         button_area.children.add(_add_button)
         _add_button.setOnAction {
             _outer.bottom = _editor.getNode()
-            _add_button.disableProperty().set(true)
+            updateButtonStates(false)
+        }
+
+        _edit_button.id = EDIT_BUTTON_ID
+        _edit_button.graphic = Glyphs.create("FA:EDIT", Color.GREEN)
+        _edit_button.disableProperty().set(true) // disabled until selection made
+        button_area.children.add(_edit_button)
+        _edit_button.setOnAction {
+            _editing_project = _selected_project
+            _editor.setProject(_selected_project)
+            _outer.bottom = _editor.getNode()
+            updateButtonStates(false)
         }
 
         _editor.setOnAction(object : RegisteredProjectEditor.ActionListener {
             override fun savePressed(project: RegisteredProject)
             {
-                addFinished(project)
+                if (_editing_project == null)
+                    addFinished(project)
+                else
+                    editFinished(project)
             }
 
             override fun cancelPressed()
             {
-                addFinished(null)
+                if (_editing_project == null)
+                    addFinished(null)
+                else
+                    editFinished(null)
+            }
+        })
+
+        _table.addSelectionListener(object : ProjectListTable.SelectionListener {
+            override fun selectionChanged(project: RegisteredProject?)
+            {
+                _selected_project = project
+                _edit_button.disableProperty().set(project == null)
             }
         })
     }
@@ -79,5 +129,6 @@ class ProjectsTab
     companion object
     {
         const val ADD_BUTTON_ID = "omrdp-pt-add"
+        const val EDIT_BUTTON_ID = "omrdp-pt-edit"
     }
 }

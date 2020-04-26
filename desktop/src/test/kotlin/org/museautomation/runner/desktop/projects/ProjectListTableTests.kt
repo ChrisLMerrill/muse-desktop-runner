@@ -133,11 +133,6 @@ class ProjectListTableTests: ComponentTest()
         TODO()
     }
 
-    private fun setupLocalProject(): RegisteredProject
-    {
-        return RegisteredProject("project1", "Project #1", "/path/to/the/project", null)
-    }
-
     private fun setupDownloadedProject(): RegisteredProject
     {
         val version = DownloadableProjectVersion(Date(), 12, "version 12 notes")
@@ -153,5 +148,13 @@ class ProjectListTableTests: ComponentTest()
     {
         _table = ProjectListTable()
         return _table.getNode()
+    }
+
+    companion object
+    {
+        fun setupLocalProject(): RegisteredProject
+        {
+            return RegisteredProject("project1", "Project #1", "/path/to/the/project", null)
+        }
     }
 }

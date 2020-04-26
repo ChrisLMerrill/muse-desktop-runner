@@ -2,6 +2,7 @@ package org.museautomation.runner.desktop.projects
 
 import javafx.scene.Node
 import javafx.scene.control.TabPane
+import javafx.scene.input.KeyCode
 import net.christophermerrill.testfx.ComponentTest
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -22,12 +23,16 @@ class ProjectsTabTests: ComponentTest()
     {
         assertFalse(exists(id(RegisteredProjectEditor.EDITOR_NODE_ID)))
         clickOn(id(ProjectsTab.ADD_BUTTON_ID))
+        assertTrue(isDisabled(id(ProjectsTab.ADD_BUTTON_ID)))
+        assertTrue(isDisabled(id(ProjectsTab.EDIT_BUTTON_ID)))
         assertTrue(exists(id(RegisteredProjectEditor.EDITOR_NODE_ID)))
 
         RegisteredProjectEditorTests.fillAndSaveLocalProject(this, "Added Project", "project-added", "/added/path")
 
         assertFalse(exists(id(RegisteredProjectEditor.EDITOR_NODE_ID)))
         assertTrue(exists("Added Project"))
+        assertFalse(isDisabled(id(ProjectsTab.ADD_BUTTON_ID)))
+        assertTrue(isDisabled(id(ProjectsTab.EDIT_BUTTON_ID)))
     }
 
     @Test
@@ -38,6 +43,34 @@ class ProjectsTabTests: ComponentTest()
         clickOn(id(RegisteredProjectEditor.CANCEL_BUTTON_ID))
         internalTestAddProject()
     }
+
+    @Test
+    fun editProject()
+    {
+        val project = ProjectListTableTests.setupLocalProject()
+        _tab.setProjects(mutableListOf(project))
+        waitForUiEvents()
+
+        assertTrue(isDisabled(id(ProjectsTab.EDIT_BUTTON_ID)))
+
+        clickOn(project.name)
+        assertFalse(isDisabled(id(ProjectsTab.EDIT_BUTTON_ID)))
+
+        clickOn(id(ProjectsTab.EDIT_BUTTON_ID))
+        assertTrue(isDisabled(id(ProjectsTab.ADD_BUTTON_ID)))
+        assertTrue(isDisabled(id(ProjectsTab.EDIT_BUTTON_ID)))
+        assertTrue(exists(id(RegisteredProjectEditor.EDITOR_NODE_ID)))
+
+        RegisteredProjectEditorTests.fillAndSaveLocalProject(this, "Edited Project", "project-edited", "/edited/path")
+        assertFalse(exists(id(RegisteredProjectEditor.EDITOR_NODE_ID)))
+        assertTrue(exists("Edited Project"))
+        assertFalse(isDisabled(id(ProjectsTab.ADD_BUTTON_ID)))
+        assertFalse(isDisabled(id(ProjectsTab.EDIT_BUTTON_ID)))
+
+        press(KeyCode.CONTROL).clickOn("Edited Project").release(KeyCode.CONTROL)
+        assertTrue(isDisabled(id(ProjectsTab.EDIT_BUTTON_ID)))
+    }
+
 
     private lateinit var _tab: ProjectsTab
 

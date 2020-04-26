@@ -31,6 +31,11 @@ object RegisteredProjects : SettingsFolder()
         saveFile(project, FOLDER, project.id + ".json", mapper)
     }
 
+    fun save(project: RegisteredProject)
+    {
+        saveFile(project, FOLDER, project.id + ".json", mapper)
+    }
+
     fun clear()
     {
         _projects.clear()
