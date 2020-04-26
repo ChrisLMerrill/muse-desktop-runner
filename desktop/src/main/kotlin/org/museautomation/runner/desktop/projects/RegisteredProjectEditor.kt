@@ -1,7 +1,7 @@
 package org.museautomation.runner.desktop.projects
 
 import javafx.application.Platform
-import javafx.geometry.HPos
+import javafx.geometry.Pos
 import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
@@ -10,8 +10,10 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
 import org.museautomation.runner.projects.DownloadableProjectSettings
 import org.museautomation.runner.projects.RegisteredProject
+import org.museautomation.ui.extend.glyphs.Glyphs
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -147,14 +149,17 @@ class RegisteredProjectEditor
 
         row++
         val buttons = HBox()
+        buttons.alignment = Pos.CENTER_RIGHT
         GridPane.setHgrow(buttons, Priority.ALWAYS)
-        GridPane.setHalignment(buttons, HPos.RIGHT)
+        GridPane.setFillWidth(buttons, true)
         _grid.add(buttons, 1, row)
 
         _save_button.id = SAVE_BUTTON_ID
+        _save_button.graphic = Glyphs.create("FA:CHECK_CIRCLE", Color.GREEN)
         _save_button.setOnAction { _listener?.savePressed(getProject()) }
         buttons.children.add(_save_button)
         _cancel_button.id = CANCEL_BUTTON_ID
+        _cancel_button.graphic = Glyphs.create("FA:TIMES_CIRCLE", Color.DARKRED)
         _cancel_button.setOnAction { _listener?.cancelPressed() }
         buttons.children.add(_cancel_button)
     }
