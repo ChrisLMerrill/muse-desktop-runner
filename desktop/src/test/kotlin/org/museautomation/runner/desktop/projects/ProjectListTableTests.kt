@@ -1,0 +1,132 @@
+package org.museautomation.runner.desktop.projects
+
+import javafx.scene.Node
+import net.christophermerrill.testfx.ComponentTest
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.museautomation.runner.projects.DownloadableProject
+import org.museautomation.runner.projects.DownloadableProjectSettings
+import org.museautomation.runner.projects.DownloadableProjectVersion
+import org.museautomation.runner.projects.RegisteredProject
+import java.util.*
+
+/**
+ * @author Christopher L Merrill (see LICENSE.txt for license details)
+ */
+class ProjectListTableTests: ComponentTest()
+{
+    @Test
+    fun showProjects()
+    {
+        val local = setupLocalProject()
+        val download = setupDownloadedProject()
+        val projects = mutableListOf<RegisteredProject>()
+        projects.add(local)
+        projects.add(download)
+        _table.setProjects(projects)
+        waitForUiEvents()
+
+        assertTrue(exists(local.name))
+        assertTrue(exists(download.name))
+        assertTrue(exists(download.download_settings?.spec?.latest?.number.toString()))
+        val formatted_date = _table.date_format.format(download.download_settings?.spec?.latest?.date)
+        assertTrue(exists(formatted_date))
+    }
+
+    @Test
+    fun showAddedProject()
+    {
+        val local = setupLocalProject()
+        val projects = mutableListOf<RegisteredProject>()
+        projects.add(local)
+        _table.setProjects(projects)
+        waitForUiEvents()
+
+        val download = setupDownloadedProject()
+        assertFalse(exists(download.name))
+
+        _table.add(download)
+        waitForUiEvents()
+
+        assertTrue(exists(download.name))
+    }
+
+    @Test
+    fun showEditedProject()
+    {
+        val local = setupLocalProject()
+        val projects = mutableListOf<RegisteredProject>()
+        projects.add(local)
+        _table.setProjects(projects)
+        waitForUiEvents()
+
+        assertTrue(exists(local.name))
+
+        val old_name = local.name
+        val new_name = "new_project_name"
+        local.name = new_name
+        _table.update(local)
+        waitForUiEvents()
+
+        assertFalse(exists(old_name))
+        assertTrue(exists(new_name))
+    }
+    
+    @Test
+    fun pressProjectEditButton()
+    {
+
+        TODO()
+    }
+
+    @Test
+    fun pressUpdateButton()
+    {
+
+        TODO()
+    }
+
+    @Test
+    fun pressCheckButton()
+    {
+
+        TODO()
+    }
+
+    @Test
+    fun finishUpdateCheck()
+    {
+
+        TODO()
+    }
+
+    @Test
+    fun finishProjectUpdate()
+    {
+
+        TODO()
+    }
+
+    private fun setupLocalProject(): RegisteredProject
+    {
+        return RegisteredProject("project1", "Project #1", "/path/to/the/project", null)
+    }
+
+    private fun setupDownloadedProject(): RegisteredProject
+    {
+        val version = DownloadableProjectVersion(Date(), 12, "version 12 notes")
+        val spec = DownloadableProject("Project #1", "version.url", version, emptyList())
+        val settings = DownloadableProjectSettings("http://download.me/project", spec)
+        val project = RegisteredProject("projectD", "Project Downloaded", "/path/to/the/downloaded/project", settings)
+        return project
+    }
+
+    private lateinit var _table: ProjectListTable
+
+    override fun createComponentNode(): Node
+    {
+        _table = ProjectListTable()
+        return _table.getNode()
+    }
+}
