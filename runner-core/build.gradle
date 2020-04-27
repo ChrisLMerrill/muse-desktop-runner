@@ -22,6 +22,7 @@ dependencies {
     implementation "org.museautomation:muse-core:[0.23,)"
     implementation "org.museautomation:muse-selenium:[0.23,)"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.10"
+    implementation "commons-io:commons-io:2.6"
     
     testCompile 'org.junit.jupiter:junit-jupiter-api:5+'
 }

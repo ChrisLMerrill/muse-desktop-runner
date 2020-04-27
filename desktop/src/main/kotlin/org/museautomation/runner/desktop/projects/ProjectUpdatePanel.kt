@@ -81,10 +81,15 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
                     showMessage("DownloadSettings is null")
                 else
                 {
-                    val updater = ProjectUpdater(settings)
+                    val updater = ProjectUpdater(settings, row_state.row.project.path)
                     _updater = updater
                     val result = updater.checkForUpdates()
-                    if (result.success)
+                    if (result.success && updater._download_unversioned)
+                    {
+                        _update_version_label.text = " from URL"
+                        setState(ProjectUpdateState.ReadyToUpdate)
+                    }
+                    else if (result.success)
                     {
                         val download_spec = settings.spec
                         if (download_spec == null)
@@ -92,7 +97,7 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
                         else
                         {
                             val installed = settings.installedVersion
-                            if (installed == null || installed.number == download_spec.latest.number)
+                            if (installed == null || installed.number < download_spec.latest.number)
                             {
                                 _update_version_label.text = " to version " + download_spec.latest.number
                                 setState(ProjectUpdateState.ReadyToUpdate)
@@ -115,13 +120,25 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
         _ready_node.children.add(_update_version_label)
         update_button.setOnAction {
             val thread = Thread(Runnable {
-                val settings = row_state.row.project.download_settings
-                if (settings == null)
-                    showMessage("DownloadSettings is null")
+                val updater = _updater
+                if (updater == null)
+                    showMessage("Updater is missing")
                 else
                 {
-                    Thread.sleep(3000)
-                    showMessage("updated to version N")
+                    if (updater._download_unversioned)
+                    {
+                        val result = updater.updateUnversioned()
+                        if (!result.success)
+                            showMessage(result.message!!)
+                        else
+                            showMessage("Project is updated")
+                    }
+                    else
+                    {
+                        // TODO download from settings
+                        Thread.sleep(3000)
+                        showMessage("updated to version N")
+                    }
                 }
             })
             thread.start()
