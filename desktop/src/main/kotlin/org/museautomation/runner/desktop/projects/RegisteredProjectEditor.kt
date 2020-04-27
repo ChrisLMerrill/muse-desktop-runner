@@ -86,7 +86,7 @@ class RegisteredProjectEditor
         val project = _project
         var download: DownloadableProjectSettings? = null
         if (_download_field.isSelected)
-            download = DownloadableProjectSettings(_url_field.text, null)
+            download = DownloadableProjectSettings(_url_field.text, null, null)
         return if (project == null)
         {
             RegisteredProject(_id_field.text, _name_field.text, _path_field.text, download)

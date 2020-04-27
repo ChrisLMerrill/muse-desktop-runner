@@ -7,6 +7,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
+import org.museautomation.runner.projects.ProjectUpdater
 import org.museautomation.ui.extend.glyphs.Glyphs
 
 /**
@@ -61,9 +62,11 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
     private var _start_node = HBox()
     private val _checking_node = Label("Checking...")
     private val _ready_node = HBox()
+    private val _update_version_label = Label()
     private val _updating_node = Label("Updating...")
     private val _message_label = Label()
     private val _message_node = BorderPane()
+    private var _updater: ProjectUpdater? = null
 
     init
     {
@@ -73,9 +76,34 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
         _start_node.children.add(Label(" for updates"))
         check_button.setOnAction {
             val thread = Thread(Runnable {
-                println("checking...")
-                Thread.sleep(3000)
-                setState(ProjectUpdateState.ReadyToUpdate)
+                val settings = row_state.row.project.download_settings
+                if (settings == null)
+                    showMessage("DownloadSettings is null")
+                else
+                {
+                    val updater = ProjectUpdater(settings)
+                    _updater = updater
+                    val result = updater.checkForUpdates()
+                    if (result.success)
+                    {
+                        val download_spec = settings.spec
+                        if (download_spec == null)
+                            showMessage(result.message ?: "Download Specification not found")
+                        else
+                        {
+                            val installed = settings.installedVersion
+                            if (installed == null || installed.number == download_spec.latest.number)
+                            {
+                                _update_version_label.text = " to version " + download_spec.latest.number
+                                setState(ProjectUpdateState.ReadyToUpdate)
+                            }
+                            else
+                                showMessage("Project is up to date")
+                        }
+                    }
+                    else
+                        showMessage(result.message ?: "unexpected failure")
+                }
             })
             thread.start()
             setState(ProjectUpdateState.Checking)
@@ -84,13 +112,17 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
         val update_button = Button("Update")
         _ready_node.alignment = Pos.CENTER
         _ready_node.children.add(update_button)
-        _ready_node.children.add(Label(" to version N"))
+        _ready_node.children.add(_update_version_label)
         update_button.setOnAction {
             val thread = Thread(Runnable {
-                println("updating...")
-                Thread.sleep(3000)
-                _message_label.text = "updated to version N"
-                setState(ProjectUpdateState.Message)
+                val settings = row_state.row.project.download_settings
+                if (settings == null)
+                    showMessage("DownloadSettings is null")
+                else
+                {
+                    Thread.sleep(3000)
+                    showMessage("updated to version N")
+                }
             })
             thread.start()
             setState(ProjectUpdateState.Updating)

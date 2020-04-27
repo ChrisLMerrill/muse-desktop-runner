@@ -30,16 +30,16 @@ class ProjectRow(private val table: ProjectListTable, val project: RegisteredPro
     fun update()
     {
         name = project.name
-        val latest = project.download_settings?.spec?.latest
-        if (latest == null)
+        val installed = project.download_settings?.installedVersion
+        if (installed == null)
         {
             version = ""
             date = ""
         }
         else
         {
-            version = latest.number.toString()
-            date = table.date_format.format(latest.date)
+            version = installed.number.toString()
+            date = table.date_format.format(installed.date)
         }
     }
 }

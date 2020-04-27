@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.museautomation.runner.projects.DownloadableProject
 import org.museautomation.runner.projects.DownloadableProjectSettings
-import org.museautomation.runner.projects.DownloadableProjectVersion
+import org.museautomation.runner.projects.ProjectVersion
 import org.museautomation.runner.projects.RegisteredProject
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -135,11 +135,10 @@ class ProjectListTableTests: ComponentTest()
 
     private fun setupDownloadedProject(): RegisteredProject
     {
-        val version = DownloadableProjectVersion(Date(), 12, "version 12 notes")
+        val version = ProjectVersion(Date().time, 12, "version 12 notes")
         val spec = DownloadableProject("Project #1", "version.url", version, emptyList())
-        val settings = DownloadableProjectSettings("http://download.me/project", spec)
-        val project = RegisteredProject("projectD", "Project Downloaded", "/path/to/the/downloaded/project", settings)
-        return project
+        val settings = DownloadableProjectSettings("http://download.me/project", spec, version)
+        return RegisteredProject("projectD", "Project Downloaded", "/path/to/the/downloaded/project", settings)
     }
 
     private lateinit var _table: ProjectListTable
