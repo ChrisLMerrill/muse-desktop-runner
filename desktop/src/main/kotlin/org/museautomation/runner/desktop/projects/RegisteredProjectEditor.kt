@@ -131,8 +131,8 @@ class RegisteredProjectEditor
         _grid.add(id_label, 0, row)
         _id_field.id = ID_FIELD_ID
         _grid.add(_id_field, 1, row)
-        _id_field.focusedProperty().addListener({ _, _, focused ->
-            if (focused)
+        _id_field.focusedProperty().addListener({ _, was_focused, focused ->
+            if (was_focused && !focused)
                 _path_field.text = "${DesktopRunnerApp.BASE_SETTINGS_FOLDER.absolutePath}${File.separator}project-data${File.separator}${_id_field.text}"
         })
 
