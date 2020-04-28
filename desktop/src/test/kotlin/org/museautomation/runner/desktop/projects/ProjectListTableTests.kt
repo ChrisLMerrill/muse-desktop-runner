@@ -94,43 +94,8 @@ class ProjectListTableTests: ComponentTest()
         assertEquals(local, selected.get())
         clickOn(download.name)
         assertEquals(download, selected.get())
-        press(KeyCode.SHIFT).clickOn(download.name).release(KeyCode.SHIFT)
+        press(KeyCode.CONTROL).clickOn(download.name).release(KeyCode.CONTROL)
         assertNull(selected.get())
-    }
-
-    @Test
-    fun pressProjectEditButton()
-    {
-
-        TODO()
-    }
-
-    @Test
-    fun pressUpdateButton()
-    {
-
-        TODO()
-    }
-
-    @Test
-    fun pressCheckButton()
-    {
-
-        TODO()
-    }
-
-    @Test
-    fun finishUpdateCheck()
-    {
-
-        TODO()
-    }
-
-    @Test
-    fun finishProjectUpdate()
-    {
-
-        TODO()
     }
 
     private fun setupDownloadedProject(): RegisteredProject

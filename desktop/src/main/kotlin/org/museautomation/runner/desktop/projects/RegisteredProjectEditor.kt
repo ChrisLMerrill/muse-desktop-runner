@@ -133,7 +133,7 @@ class RegisteredProjectEditor
         _grid.add(_id_field, 1, row)
         _id_field.focusedProperty().addListener({ _, was_focused, focused ->
             if (was_focused && !focused)
-                _path_field.text = "${DesktopRunnerApp.BASE_SETTINGS_FOLDER.absolutePath}${File.separator}project-data${File.separator}${_id_field.text}"
+                _path_field.text = "${DesktopRunnerApp.getHomeFolder().absolutePath}${File.separator}project-data${File.separator}${_id_field.text}"
         })
 
         row++

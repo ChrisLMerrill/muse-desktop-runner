@@ -133,7 +133,7 @@ class RegisteredProjectEditorTests: ComponentTest()
 
     private fun setupDownloadedProject(): RegisteredProject
     {
-        val settings = DownloadableProjectSettings("http://download.me/project", null)
+        val settings = DownloadableProjectSettings("http://download.me/project", null, null)
         val project = RegisteredProject("projectD", "Project Downloaded", "/path/to/the/downloaded/project", settings)
         _editor.setProject(project)
         return project

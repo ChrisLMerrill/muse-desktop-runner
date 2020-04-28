@@ -4,6 +4,7 @@ import javafx.application.Application
 import javafx.application.Platform
 import javafx.stage.Stage
 import org.museautomation.runner.settings.SettingsFiles
+import org.museautomation.runner.settings.SettingsFolder
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -102,6 +103,22 @@ open class DesktopRunnerApp: Application()
     companion object
     {
         lateinit var INSTANCE: DesktopRunnerApp
-        var BASE_SETTINGS_FOLDER: File = File(File(System.getProperty("user.home")), ".muse/runner")
+        private var BASE_SETTINGS_FOLDER: File = File(File(System.getProperty("user.home")), "default")
+
+        fun setHomeFolder(path: String)
+        {
+            BASE_SETTINGS_FOLDER = File(File(System.getProperty("user.home")), path)
+            SettingsFolder.BASE_FOLDER = BASE_SETTINGS_FOLDER
+        }
+
+        fun getHomeFolder(): File
+        {
+            return BASE_SETTINGS_FOLDER
+        }
+
+        init
+        {
+            setHomeFolder(".muse/runner")
+        }
     }
 }
