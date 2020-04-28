@@ -15,7 +15,6 @@ open class DesktopRunnerApp: Application()
     {
         Platform.setImplicitExit(false)  // without this, the Platform shuts down when the first window closes...preventing creation of new windows
         INSTANCE = this
-        SettingsFiles.FACTORY.setBaseLocation(getSettingsFolder())
     }
 
     override fun start(stage: Stage)
@@ -109,6 +108,7 @@ open class DesktopRunnerApp: Application()
         {
             BASE_SETTINGS_FOLDER = File(File(System.getProperty("user.home")), path)
             SettingsFolder.BASE_FOLDER = BASE_SETTINGS_FOLDER
+            SettingsFiles.FACTORY.setBaseLocation(BASE_SETTINGS_FOLDER)
         }
 
         fun getHomeFolder(): File

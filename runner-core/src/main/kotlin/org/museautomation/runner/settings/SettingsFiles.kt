@@ -40,6 +40,11 @@ class SettingsFiles
         }
     }
 
+    fun exists(filename: String): Boolean
+    {
+        return File(_base_folder, filename).exists()
+    }
+
     fun setBaseLocation(base: File)
     {
         _base_folder = base

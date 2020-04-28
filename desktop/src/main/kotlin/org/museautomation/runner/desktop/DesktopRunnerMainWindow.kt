@@ -30,32 +30,25 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
         _stage = stage
         stage.scene = createScene()
 
-        val settings_name = "MainWindow-stage.json"
-        val settings = SettingsFiles.FACTORY.getSettings(settings_name, StageSettings::class.java)
-        if (settings.width > 0)
+        val use_default = !SettingsFiles.FACTORY.exists(settings_name)
+        if (use_default)
+        {
+            val size = getDefaultSize()
+            stage.width = size.width
+            stage.height = size.height
+        }
+        else
         {
             stage.x = settings.x
             stage.y = settings.y
             stage.width = settings.width
             stage.height = settings.height
         }
-        else
-        {
-            val size = getDefaultSize()
-            stage.width = size.width
-            stage.width = size.height
-        }
 
         stage.title = getTitle()
         addWindowIcons(stage.icons)
         stage.show()
         stage.setOnCloseRequest {event ->
-            settings.x = stage.x
-            settings.y = stage.y
-            settings.width = stage.width
-            settings.height = stage.height
-            SettingsFiles.FACTORY.storeSettings(settings_name, settings)
-
             close()
             stage.close()
             event.consume()
@@ -121,6 +114,12 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
 
     open fun close()
     {
+        settings.x = _stage.x
+        settings.y = _stage.y
+        settings.width = _stage.width
+        settings.height = _stage.height
+        SettingsFiles.FACTORY.storeSettings(settings_name, settings)
+
         _stage.close()
     }
 
@@ -136,4 +135,12 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
 
     private lateinit var _first_tab : Tab
     private lateinit var _stage : Stage
+    private val settings: StageSettings
+    private val settings_name = "MainWindow-stage.json"
+
+    init
+    {
+        settings = SettingsFiles.FACTORY.getSettings(settings_name, StageSettings::class.java)
+
+    }
 }
