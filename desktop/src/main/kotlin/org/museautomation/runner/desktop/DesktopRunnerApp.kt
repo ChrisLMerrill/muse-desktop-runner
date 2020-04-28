@@ -102,6 +102,6 @@ open class DesktopRunnerApp: Application()
     companion object
     {
         lateinit var INSTANCE: DesktopRunnerApp
-        private val BASE_SETTINGS_FOLDER: File = File(File(System.getProperty("user.home")), ".muse/runner")
+        var BASE_SETTINGS_FOLDER: File = File(File(System.getProperty("user.home")), ".muse/runner")
     }
 }
