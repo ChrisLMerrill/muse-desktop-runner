@@ -45,7 +45,7 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
             stage.height = settings.height
         }
 
-        stage.title = getTitle()
+        stage.title = createStageTitle()
         addWindowIcons(stage.icons)
         stage.show()
         stage.setOnCloseRequest {event ->
@@ -111,6 +111,19 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
     }
 
     open fun getTitle() = "Muse Runner"
+
+    private fun createStageTitle(): String
+    {
+        var title = getTitle()
+        val is_default = System.getProperty("release.channel.isDefault")
+        if (is_default != null && !is_default.toBoolean())
+        {
+            val channel = System.getProperty("release.channel")
+            if (channel != null)
+                title = "$title ($channel)"
+        }
+        return title
+    }
 
     open fun close()
     {
