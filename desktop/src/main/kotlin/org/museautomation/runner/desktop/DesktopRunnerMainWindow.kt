@@ -85,8 +85,7 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
     {
         val tabs = mutableListOf<Tab>()
 
-        val projects_tab = ProjectsTab()
-        projects_tab.setProjects(RegisteredProjects.asList())
+        val projects_tab = createProjectsTab()
         tabs.add(projects_tab.getTab())
         _first_tab = projects_tab.getTab()
 
@@ -101,6 +100,13 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
         return tabs
     }
 
+    protected fun createProjectsTab(): ProjectsTab
+    {
+        val projects_tab = ProjectsTab()
+        projects_tab.setProjects(RegisteredProjects.asList())
+        return projects_tab
+    }
+    
     open fun getInitialTab() : Tab
     {
         return _first_tab
