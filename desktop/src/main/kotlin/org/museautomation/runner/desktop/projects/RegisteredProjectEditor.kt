@@ -11,9 +11,11 @@ import javafx.scene.layout.GridPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
+import org.museautomation.runner.desktop.DesktopRunnerApp
 import org.museautomation.runner.projects.DownloadableProjectSettings
 import org.museautomation.runner.projects.RegisteredProject
 import org.museautomation.ui.extend.glyphs.Glyphs
+import java.io.File
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
@@ -129,6 +131,10 @@ class RegisteredProjectEditor
         _grid.add(id_label, 0, row)
         _id_field.id = ID_FIELD_ID
         _grid.add(_id_field, 1, row)
+        _id_field.focusedProperty().addListener({ _, _, focused ->
+            if (focused)
+                _path_field.text = "${DesktopRunnerApp.BASE_SETTINGS_FOLDER.absolutePath}${File.separator}project-data${File.separator}${_id_field.text}"
+        })
 
         row++
         val path_label = Label("Path")
