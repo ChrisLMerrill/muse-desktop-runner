@@ -28,7 +28,8 @@ open class DesktopRunnerTrayUI(app: DesktopRunnerApp, menu_provider: DesktopRunn
 
     open fun shutdown()
     {
-        SystemTray.getSystemTray().remove(_tray_icon)
+        if (SystemTray.isSupported() && !System.getProperty("os.name").toLowerCase().contains("mac"))  // removing the tray icon hangs on MacOS
+            SystemTray.getSystemTray().remove(_tray_icon)  // on Windows, must remove, or it will be abandoned
     }
 
     fun showNotification(title: String, message: String, success: Boolean)
