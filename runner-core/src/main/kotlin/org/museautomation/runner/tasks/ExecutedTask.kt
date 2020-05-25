@@ -1,6 +1,5 @@
 package org.museautomation.runner.tasks
 
-import org.museautomation.builtins.plugins.resultstorage.LocalStorageLocationEventType
 import org.museautomation.core.events.matching.EventTypeMatcher
 import org.museautomation.core.task.state.EndStateTransitionEventType
 import org.museautomation.core.task.state.StartStateTransitionEventType
@@ -26,7 +25,10 @@ data class ExecutedTask (var taskId: String,
         {
             val context = transition.context
             val result = transition.result
-            
+
+            var output_folder: String? = null
+            if (result.taskResult() != null)
+                output_folder = result.taskResult().storageLocation
             val start_time = context.eventLog.findFirstEvent(EventTypeMatcher(StartStateTransitionEventType.TYPE_ID)).timestamp
             val end_time = context.eventLog.findFirstEvent(EventTypeMatcher(EndStateTransitionEventType.TYPE_ID)).timestamp
 
@@ -35,13 +37,6 @@ data class ExecutedTask (var taskId: String,
                 message = "Completed successfully"
             else
                 message = result.failureMessage
-
-            var output_folder: String? = null
-            val event = transition.taskContext.eventLog.findFirstEvent(EventTypeMatcher(LocalStorageLocationEventType.TYPE_ID))
-            if (event != null) {
-                if (LocalStorageLocationEventType().getTestPath(event) != null)
-                    output_folder = LocalStorageLocationEventType().getTestPath(event)
-            }
 
             return ExecutedTask(context.config.taskId, start_time, end_time, output_folder, result.transitionSuccess(), message, context.config.id)
         }
