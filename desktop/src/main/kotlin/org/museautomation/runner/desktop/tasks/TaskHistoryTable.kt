@@ -1,5 +1,7 @@
 package org.museautomation.runner.desktop.tasks
 
+import javafx.collections.FXCollections
+import javafx.collections.transformation.SortedList
 import javafx.scene.Node
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
@@ -12,6 +14,7 @@ import java.text.Format
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.time.Duration
+import java.util.*
 
 
 /**
@@ -26,12 +29,26 @@ class TaskHistoryTable
 
     fun setTasks(tasks: List<ExecutedTask>)
     {
-        _table.items.clear()
-        for (task in tasks)
-            _table.items.add(task)
+        _list.clear()
+        _list.addAll(tasks)
+        val sorted = SortedList(_list)
+        // create comparator to sort in reverse chronological order of task start time
+        sorted.comparatorProperty().set(Comparator { (_, startTime1), (_, startTime2) -> Objects.compare(startTime2, startTime1, Comparator.comparingLong { aLong: Long? -> aLong!! }) })
+        _table.items = sorted
+    }
+
+    fun addTask(task: ExecutedTask)
+    {
+        _list.add(task)
+    }
+
+    fun removeTask(task: ExecutedTask)
+    {
+        _list.remove(task)
     }
 
     val _table: TableView<ExecutedTask> = TableView<ExecutedTask>()
+    val _list = FXCollections.observableArrayList<ExecutedTask>()
 
     init
     {
@@ -64,12 +81,6 @@ class TaskHistoryTable
     {
         const val TABLE_ID = "omrdt.tht.id"
         val DATE_FORMATTER = SimpleDateFormat("dd MMM HH:mm:ss")
-
-        fun formatDuration(duration: Long): String
-        {
-            return "1123"
-        }
-
     }
 
     class TaskDurationFormat: Format()

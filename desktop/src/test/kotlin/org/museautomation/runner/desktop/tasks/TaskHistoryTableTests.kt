@@ -9,7 +9,7 @@ import org.museautomation.runner.tasks.ExecutedTask
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-class ProjectListTableTests: ComponentTest()
+class TaskHistoryTableTests: ComponentTest()
 {
     @Test
     fun showTasks()
@@ -32,14 +32,49 @@ class ProjectListTableTests: ComponentTest()
 
     }
 
+    @Test
+    fun addTask()
+    {
+        val tasks = setupTasks()
+        _table.setTasks(tasks)
+        waitForUiEvents()
+
+        val new_task = createTask(7)
+        _table.addTask(new_task)
+        waitForUiEvents()
+        Assertions.assertTrue(exists(new_task.taskId))
+        Assertions.assertTrue(exists(new_task.message))
+        Assertions.assertTrue(exists(TaskHistoryTable.DATE_FORMATTER.format(new_task.startTime)))
+        Assertions.assertTrue(exists(TaskHistoryTable.TaskDurationFormat().format(new_task.getDuration())))
+    }
+
+    @Test
+    fun removeTask()
+    {
+        val tasks = setupTasks()
+        _table.setTasks(tasks)
+        waitForUiEvents()
+
+        _table.removeTask(tasks[0])
+        waitForUiEvents()
+
+        Assertions.assertFalse(exists(tasks[0].taskId))
+        Assertions.assertTrue(exists(tasks[1].taskId))
+    }
+
     private fun setupTasks(): List<ExecutedTask>
     {
         val tasks = mutableListOf<ExecutedTask>()
         tasks.add(ExecutedTask("taskid1", System.currentTimeMillis() - 1000, System.currentTimeMillis(), "/path/to/results", true, "Complete", null))
-        tasks.add(ExecutedTask("taskid1", System.currentTimeMillis() - (100000 + 3 * 60000), System.currentTimeMillis() - 100000, "/other/path", false, "FAIL", "transid1"))
+        tasks.add(ExecutedTask("taskid2", System.currentTimeMillis() - (100000 + 3 * 60000), System.currentTimeMillis() - 100000, "/other/path", false, "FAIL", "transid1"))
         return tasks
     }
 
+    private fun createTask(index: Int): ExecutedTask
+    {
+        val start_time = System.currentTimeMillis() - 100000 * index
+        return ExecutedTask("taskid$index", start_time, start_time + 1000 * index, "/path/to/task/$index", true, "Complete $index", null)
+    }
 
     private lateinit var _table: TaskHistoryTable
 
