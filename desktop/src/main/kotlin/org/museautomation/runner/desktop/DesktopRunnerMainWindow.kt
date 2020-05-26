@@ -4,17 +4,16 @@ import javafx.application.Platform
 import javafx.collections.ObservableList
 import javafx.geometry.Dimension2D
 import javafx.scene.Scene
-import javafx.scene.control.Label
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import org.museautomation.runner.desktop.projects.ProjectsTab
-import org.museautomation.runner.jobs.JobRuns
-import org.museautomation.runner.jobs.Jobs
+import org.museautomation.runner.desktop.tasks.TaskHistoryTab
 import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.runner.settings.SettingsFiles
 import org.museautomation.runner.settings.StageSettings
+import org.museautomation.runner.tasks.ExecutedTasks
 
 /*
  * This is the main window that is shown:
@@ -82,13 +81,8 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
         tabs.add(projects_tab.getTab())
         _first_tab = projects_tab.getTab()
 
-        val jobs_tab = Tab("Jobs")
-        jobs_tab.content = Label("There are ${Jobs.asList().size} jobs")
-        tabs.add(jobs_tab)
-
-        val runs_tab = Tab("Runs")
-        runs_tab.content = Label("There are ${JobRuns.asList().size} runs")
-        tabs.add(runs_tab)
+        val tasks_tab = createTaskHistoryTab()
+        tabs.add(tasks_tab.getTab())
 
         return tabs
     }
@@ -100,6 +94,13 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
         return projects_tab
     }
     
+    protected fun createTaskHistoryTab(): TaskHistoryTab
+    {
+        val tasks_tab = TaskHistoryTab()
+        tasks_tab.setTasks(ExecutedTasks.asList())
+        return tasks_tab
+    }
+
     open fun getInitialTab() : Tab
     {
         return _first_tab
