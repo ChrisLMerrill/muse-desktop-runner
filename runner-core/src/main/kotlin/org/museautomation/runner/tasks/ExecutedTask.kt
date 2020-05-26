@@ -19,6 +19,15 @@ data class ExecutedTask (var taskId: String,
                          var transitionId: String?)
 
 {
+    fun getDuration(): Long
+    {
+        val start = startTime
+        val end = endTime
+        if (start== null || end == null)
+            return 0
+        return end - start
+    }
+
     companion object
     {
         fun fromTransition(transition: StateTransition): ExecutedTask
