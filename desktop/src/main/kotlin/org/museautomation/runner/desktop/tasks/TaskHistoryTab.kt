@@ -36,6 +36,11 @@ class TaskHistoryTab
         _delete_button.disableProperty().set(!edit_enabled)
     }
 
+    fun getChangeListener(): ExecutedTasks.ChangeListener
+    {
+        return _table.getChangeListener()
+    }
+
     private val _tab = Tab("Task History")
     private val _table = TaskHistoryTable()
     private val _outer = BorderPane()

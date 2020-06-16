@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory
 import org.museautomation.runner.desktop.widgets.DateCell
 import org.museautomation.runner.desktop.widgets.FormattedCell
 import org.museautomation.runner.tasks.ExecutedTask
+import org.museautomation.runner.tasks.ExecutedTasks
 import java.text.FieldPosition
 import java.text.Format
 import java.text.ParsePosition
@@ -54,9 +55,21 @@ class TaskHistoryTable
         _listener = listener
     }
 
+    fun getChangeListener(): ExecutedTasks.ChangeListener
+    {
+        return _task_change_listener
+    }
+
     val _table: TableView<ExecutedTask> = TableView<ExecutedTask>()
     val _list = FXCollections.observableArrayList<ExecutedTask>()
     private var _listener: SelectionListener? = null
+    private var _task_change_listener = object : ExecutedTasks.ChangeListener
+    {
+        override fun taskAdded(task: ExecutedTask)
+        {
+            _list.add(task)
+        }
+    }
 
     init
     {

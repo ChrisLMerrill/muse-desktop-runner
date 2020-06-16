@@ -98,6 +98,7 @@ open class DesktopRunnerMainWindow(private val app: DesktopRunnerApp)
     {
         val tasks_tab = TaskHistoryTab()
         tasks_tab.setTasks(ExecutedTasks.asList())
+        ExecutedTasks.addListener(tasks_tab.getChangeListener())
         return tasks_tab
     }
 
