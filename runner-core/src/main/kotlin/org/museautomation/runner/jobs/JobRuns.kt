@@ -11,7 +11,7 @@ import java.util.*
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
 object JobRuns : SettingsFolder() {
-    private val FOLDER = "runner/runs"
+    private val FOLDER = "runs"
     private val _runs = ArrayList<JobRun>()
     private val mapper : ObjectMapper
 
