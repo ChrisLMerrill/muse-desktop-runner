@@ -68,9 +68,9 @@ class JobRunner {
         // find result storage location
         val event = _test_context.eventLog.findFirstEvent(EventTypeMatcher(LocalStorageLocationEventType.TYPE_ID))
         if (event != null) {
-            LOG.info("task result storage location: " + LocalStorageLocationEventType().getTestPath(event))
-            if (LocalStorageLocationEventType().getTestPath(event) != null)
-                run.results = LocalStorageLocationEventType().getTestPath(event)
+            LOG.info("task result storage location: " + LocalStorageLocationEventType().getTaskPath(event))
+            if (LocalStorageLocationEventType().getTaskPath(event) != null)
+                run.results = LocalStorageLocationEventType().getTaskPath(event)
         }
 
         // find the result
