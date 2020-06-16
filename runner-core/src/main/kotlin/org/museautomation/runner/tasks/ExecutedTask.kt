@@ -1,5 +1,6 @@
 package org.museautomation.runner.tasks
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.museautomation.core.events.matching.EventTypeMatcher
 import org.museautomation.core.task.state.EndStateTransitionEventType
 import org.museautomation.core.task.state.StartStateTransitionEventType
@@ -19,6 +20,7 @@ data class ExecutedTask (var taskId: String,
                          var transitionId: String?)
 
 {
+    @JsonIgnore
     fun getDuration(): Long
     {
         val start = startTime
@@ -27,6 +29,10 @@ data class ExecutedTask (var taskId: String,
             return 0
         return end - start
     }
+
+    @SuppressWarnings("unused")
+    @Deprecated("Only here for backwards-compability")
+    fun setDuration(duration: Long) {}
 
     companion object
     {
