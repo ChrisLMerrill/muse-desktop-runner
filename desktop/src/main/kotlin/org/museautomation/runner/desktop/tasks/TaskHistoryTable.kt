@@ -1,8 +1,10 @@
 package org.museautomation.runner.desktop.tasks
 
 import javafx.collections.FXCollections
+import javafx.collections.ListChangeListener
 import javafx.collections.transformation.SortedList
 import javafx.scene.Node
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.cell.PropertyValueFactory
@@ -47,12 +49,25 @@ class TaskHistoryTable
         _list.remove(task)
     }
 
+    fun setSelectionListener(listener: SelectionListener)
+    {
+        _listener = listener
+    }
+
     val _table: TableView<ExecutedTask> = TableView<ExecutedTask>()
     val _list = FXCollections.observableArrayList<ExecutedTask>()
+    private var _listener: SelectionListener? = null
 
     init
     {
+        _table.selectionModel.selectionMode = SelectionMode.MULTIPLE
         _table.id = TABLE_ID
+        _table.selectionModel.selectedItems.addListener(ListChangeListener
+        {
+            val tasks = mutableListOf<ExecutedTask>()
+            tasks.addAll(_table.selectionModel.selectedItems)
+            _listener?.selectionChanged(tasks)
+        })
 
         val name_column = TableColumn<ExecutedTask, String>("Task")
         name_column.cellValueFactory = PropertyValueFactory("taskId")
@@ -102,5 +117,10 @@ class TaskHistoryTable
         {
             return source ?: "huh?"
         }
+    }
+
+    interface SelectionListener
+    {
+        fun selectionChanged(tasks: List<ExecutedTask>)
     }
 }

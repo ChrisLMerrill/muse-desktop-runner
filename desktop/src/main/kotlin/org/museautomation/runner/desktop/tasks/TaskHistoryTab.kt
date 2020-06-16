@@ -9,9 +9,8 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
 import javafx.stage.StageStyle
-import org.museautomation.runner.projects.RegisteredProject
-import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.runner.tasks.ExecutedTask
+import org.museautomation.runner.tasks.ExecutedTasks
 import org.museautomation.ui.extend.glyphs.Glyphs
 
 /**
@@ -33,7 +32,7 @@ class TaskHistoryTab
 
     private fun updateButtonStates(enabled: Boolean)
     {
-        val edit_enabled = enabled && _selected_project != null
+        val edit_enabled = enabled && _selected_tasks.isNotEmpty()
         _delete_button.disableProperty().set(!edit_enabled)
     }
 
@@ -41,7 +40,7 @@ class TaskHistoryTab
     private val _table = TaskHistoryTable()
     private val _outer = BorderPane()
     private val _delete_button = Button("Delete")
-    private var _selected_project: RegisteredProject? = null
+    private var _selected_tasks: List<ExecutedTask> = listOf()
 
     init
     {
@@ -60,7 +59,7 @@ class TaskHistoryTab
         _delete_button.disableProperty().set(true) // disabled until selection made
         button_area.children.add(_delete_button)
         _delete_button.setOnAction {
-            val dialog = Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete ${_selected_project?.name} ?")
+            val dialog = Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete the history of ${_selected_tasks.size} tasks?")
             dialog.title = "Confirm delete"
             dialog.headerText = null
             dialog.initStyle(StageStyle.UTILITY)
@@ -68,23 +67,23 @@ class TaskHistoryTab
             val result = dialog.showAndWait()
             if (result.isPresent && result.get() == ButtonType.OK)
             {
-                RegisteredProjects.delete(_selected_project!!)
-//                _table.removeProject(_selected_project!!)
-                _selected_project = null
-                updateButtonStates(true)
+                for (task in _selected_tasks)
+                {
+                    ExecutedTasks.delete(task)
+                    _table.removeTask(task)
+                    _selected_tasks = listOf()
+                    updateButtonStates(true)
+                }
             }
         }
 
-/*
-        _table.addSelectionListener(object : TaskHistoryTable.SelectionListener {
-            override fun selectionChanged(project: RegisteredProject?)
+        _table.setSelectionListener(object : TaskHistoryTable.SelectionListener {
+            override fun selectionChanged(tasks: List<ExecutedTask>)
             {
-                _selected_project = project
-                _edit_button.disableProperty().set(project == null)
-                _delete_button.disableProperty().set(project == null)
+                _selected_tasks = tasks
+                updateButtonStates(true)
             }
         })
-*/
     }
 
     companion object

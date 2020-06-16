@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.museautomation.runner.settings.SettingsFolder
-
+import java.io.File
 import java.util.*
 
 /**
@@ -25,10 +25,20 @@ object ExecutedTasks : SettingsFolder() {
     }
 
     fun save(task: ExecutedTask) {
-        saveFile(task, FOLDER, "${task.taskId}-${task.startTime}.json", _mapper)
+        saveFile(task, FOLDER, filename(task), _mapper)
         _tasks.add(task)
     }
 
+    private fun filename(task: ExecutedTask): String {
+        return "${task.taskId}-${task.startTime}.json"
+    }
+
+    fun delete(task: ExecutedTask)
+    {
+        _tasks.remove(task)
+        val file = File(getFolder(FOLDER), filename(task))
+        file.delete()
+    }
     override fun accept(filename: String, settings: Any) {
         var name = filename
         if (settings is ExecutedTask) {
