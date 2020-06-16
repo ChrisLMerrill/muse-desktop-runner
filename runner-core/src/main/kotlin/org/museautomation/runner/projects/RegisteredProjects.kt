@@ -13,7 +13,7 @@ import java.util.*
  */
 object RegisteredProjects : SettingsFolder()
 {
-    private const val FOLDER = "runner/projects"
+    private const val FOLDER = "projects"
     private val _projects = ArrayList<RegisteredProject>()
     private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 

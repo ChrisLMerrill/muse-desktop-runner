@@ -13,7 +13,7 @@ import java.util.*
 object ExecutedTasks : SettingsFolder() {
     private val _tasks = ArrayList<ExecutedTask>()
     private val _mapper : ObjectMapper
-    private val FOLDER = "runner/tasks-executed"
+    private val FOLDER = "tasks-executed"
 
     init {
         _mapper = ObjectMapper().registerModule(KotlinModule()).enable(SerializationFeature.INDENT_OUTPUT)
