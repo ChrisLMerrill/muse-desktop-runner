@@ -36,6 +36,7 @@ data class ExecutedTask (var taskId: String,
 
     companion object
     {
+        @SuppressWarnings("unused")  // public API
         fun fromTransition(transition: StateTransition): ExecutedTask
         {
             val context = transition.context
@@ -45,7 +46,10 @@ data class ExecutedTask (var taskId: String,
             if (result.taskResult() != null)
                 output_folder = result.taskResult().storageLocation
             val start_time = context.eventLog.findFirstEvent(EventTypeMatcher(StartStateTransitionEventType.TYPE_ID)).timestamp
-            val end_time = context.eventLog.findFirstEvent(EventTypeMatcher(EndStateTransitionEventType.TYPE_ID)).timestamp
+            val end_event = context.eventLog.findFirstEvent(EventTypeMatcher(EndStateTransitionEventType.TYPE_ID))
+            var end_time = System.currentTimeMillis()
+            if (end_event != null)
+                end_time = end_event.timestamp
 
             val message: String
             if (result.transitionSuccess())
