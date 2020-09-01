@@ -9,7 +9,7 @@ import java.io.IOException
 
 class SettingsFiles
 {
-    fun <T> getSettings(filename: String, type: Class<T>): T
+    fun <T : Any> getSettings(filename: String, type: Class<T>): T
     {
         val found = _settings[filename]
         @Suppress("UNCHECKED_CAST")
@@ -20,8 +20,11 @@ class SettingsFiles
         if (file.exists())
             try
             {
-                return MAPPER.readValue(file, type)
-            } catch (e: IOException)
+                val settings = MAPPER.readValue(file, type)
+                _settings[filename] = settings
+                return settings
+            }
+            catch (e: IOException)
             {
                 LOG.error("Unable to read settings file ($filename) due to ${e.message}", e)
             }
@@ -34,7 +37,9 @@ class SettingsFiles
         try
         {
              MAPPER.writeValue(File(_base_folder, filename), settings)
-        } catch (e: IOException)
+            _settings[filename] = settings
+        }
+        catch (e: IOException)
         {
             LOG.error("Unable to store settings file ($filename) due to ${e.message}", e)
         }
