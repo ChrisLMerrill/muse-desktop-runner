@@ -1,4 +1,4 @@
-package org.museautomation.runner.settings
+package org.museautomation.runner.desktop.settings
 
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)

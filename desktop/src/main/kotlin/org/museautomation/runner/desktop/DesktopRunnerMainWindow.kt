@@ -12,7 +12,7 @@ import org.museautomation.runner.desktop.projects.ProjectsTab
 import org.museautomation.runner.desktop.tasks.TaskHistoryTab
 import org.museautomation.runner.projects.RegisteredProjects
 import org.museautomation.runner.settings.SettingsFiles
-import org.museautomation.runner.settings.StageSettings
+import org.museautomation.runner.desktop.settings.StageSettings
 import org.museautomation.runner.tasks.ExecutedTasks
 
 /*
