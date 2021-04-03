@@ -1,7 +1,7 @@
 package org.museautomation.runner.projects
 
 /*
- * The settings for a RegisteredProject that is downloaded by the desktop runner
+ * The settings for a RegisteredProject that can be downloaded (and updated)
  *
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
