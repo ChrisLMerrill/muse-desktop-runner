@@ -19,7 +19,7 @@ application {
 }
 
 dependencies {
-    implementation "org.museautomation:muse-core:[0.27,)"
+    api "org.museautomation:muse-core:[0.27,)"
     implementation "org.museautomation:muse-selenium:[0.27,)"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.10"
     implementation "commons-io:commons-io:2.6"
@@ -58,6 +58,8 @@ publishing {
         }
     }
 
+/*
 wrapper {
     gradleVersion = '6.3'
 }
+*/

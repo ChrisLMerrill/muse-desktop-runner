@@ -3,21 +3,23 @@ plugins {
     id 'war'
     id 'org.jetbrains.kotlin.jvm' version "1.4.10"
     id "com.stehno.gradle.dependency-checker" version "0.2.3"
-    id "org.gretty" version "3.0.3"
     id 'maven-publish'
-
 }
 
 repositories {
     mavenLocal()
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    implementation "org.museautomation:muse-core:[0.25,)"
-    compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.32'
-    compile 'org.glassfish.jersey.inject:jersey-hk2:2.32'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+    implementation "org.museautomation:runner-core:[0.1,)"
+
+    // RestEasy, Undertow & Weld provide server, CDI and JAX-RS support
+    implementation 'org.jboss.resteasy:resteasy-jackson2-provider:4.6.0.Final'
+    implementation 'org.jboss.resteasy:resteasy-undertow:4.6.0.Final'
+    implementation 'org.jboss.resteasy:resteasy-cdi:4.6.0.Final'
+    implementation 'org.jboss.weld.servlet:weld-servlet:2.4.8.Final'
+    implementation 'javax.el:javax.el-api:3.0.0'
 
     testCompile  'org.junit.jupiter:junit-jupiter-api:5+'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5+'
@@ -33,10 +35,6 @@ tasks.withType(JavaCompile) {
 
 version = '0.1'
 group = 'org.museautomation'
-
-gretty {
-  contextPath = '/'
-}
 
 test {
     useJUnitPlatform()

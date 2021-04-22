@@ -40,7 +40,7 @@ dependencies {
     implementation "org.museautomation:muse-core:[0.25,)"
     implementation "org.museautomation:ide-extend:[0.10,)"
     implementation "org.museautomation:ide-valuesource:[0.10,)"
-    implementation 'org.museautomation:runner-core:0.1'
+    api 'org.museautomation:runner-core:0.1'
     implementation 'com.squareup.okhttp3:okhttp:4.5.0'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

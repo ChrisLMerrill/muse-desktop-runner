@@ -20,6 +20,7 @@ abstract class SettingsFolder {
         if (!folder.exists() && !folder.mkdir())
             return
 
+println(folder.absoluteFile)
         val files = folder.listFiles()
         if (files != null) {
             var mapper = custom_mapper
@@ -32,6 +33,7 @@ abstract class SettingsFolder {
                         accept(source_file.name, settings)
                     }
                 } catch (e: Exception) {
+println("Unable to load settings from ${source_file.path}")
                     LOG.error("Unable to load settings from " + source_file.path, e)
                 }
             }
