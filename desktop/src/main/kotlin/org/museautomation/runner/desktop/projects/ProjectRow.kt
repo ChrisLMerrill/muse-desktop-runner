@@ -38,7 +38,7 @@ class ProjectRow(private val table: ProjectListTable, val project: RegisteredPro
         }
         else
         {
-            version = installed.number.toString()
+            version = installed.version ?: ""
             date = table.date_format.format(installed.date)
         }
     }

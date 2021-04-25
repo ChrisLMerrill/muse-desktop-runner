@@ -29,13 +29,21 @@ class DownloadableProject()
 class ProjectVersion()
 {
     var date: Long = Date().time
+    var version: String? = null
     var number: Int = 0
     var notes: String = ""
 
     constructor(date: Long, number: Int, notes: String): this()
     {
         this.date = date
-        this.number = number
+        this.version = number.toString()
+        this.notes = notes
+    }
+
+    constructor(date: Long, version: String, notes: String): this()
+    {
+        this.date = date
+        this.version = version
         this.notes = notes
     }
 }
