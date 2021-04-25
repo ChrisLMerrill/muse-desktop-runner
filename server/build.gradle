@@ -21,6 +21,7 @@ dependencies {
     implementation 'org.jboss.weld.servlet:weld-servlet:2.4.8.Final'
     implementation 'javax.el:javax.el-api:3.0.0'
 
+    testCompile  'org.mockito:mockito-all:1.10.19'
     testCompile  'org.junit.jupiter:junit-jupiter-api:5+'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5+'
 }

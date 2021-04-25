@@ -1,4 +1,4 @@
-package org.museautomation.runnner.server
+package org.museautomation.runner.server
 
 import io.undertow.Handlers
 import io.undertow.Undertow
