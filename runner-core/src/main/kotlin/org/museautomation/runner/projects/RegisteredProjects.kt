@@ -11,11 +11,11 @@ import java.util.*
 /**
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-object RegisteredProjects : SettingsFolder()
+object RegisteredProjects : SettingsFolder(), RegisteredProjectStore
 {
     private const val FOLDER = "projects"
     private val _projects = ArrayList<RegisteredProject>()
-    private val mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
+    private val _mapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule())
 
     init
     {
@@ -24,22 +24,30 @@ object RegisteredProjects : SettingsFolder()
 
     private fun load()
     {
-        loadFiles(FOLDER, RegisteredProject::class.java, mapper)
+        loadFiles(FOLDER, RegisteredProject::class.java, _mapper)
     }
 
-    fun add(project: RegisteredProject)
+    override fun add(project: RegisteredProject)
     {
-        saveFile(project, FOLDER, project.id + ".json", mapper)
+        saveFile(project, FOLDER, project.id + ".json", _mapper)
     }
 
     fun save(project: RegisteredProject)
     {
-        saveFile(project, FOLDER, project.id + ".json", mapper)
+        saveFile(project, FOLDER, project.id + ".json", _mapper)
     }
 
+    /*
+     * Only for unit testing. Clear does not remove projects from storage
+     */
     fun clear()
     {
         _projects.clear()
+    }
+
+    override fun getAll(): List<RegisteredProject>
+    {
+        return asList()
     }
 
     fun asList(): List<RegisteredProject>
@@ -47,7 +55,7 @@ object RegisteredProjects : SettingsFolder()
         return _projects
     }
 
-    operator fun get(id: String): RegisteredProject?
+    override fun get(id: String): RegisteredProject?
     {
         for (p in _projects)
             if (id == p.id)

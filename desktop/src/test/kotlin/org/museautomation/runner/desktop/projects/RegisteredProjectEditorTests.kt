@@ -126,7 +126,7 @@ class RegisteredProjectEditorTests: ComponentTest()
 
     private fun setupLocalProject(): RegisteredProject
     {
-        val project = RegisteredProject("project1", "Project #1", "/path/to/the/project", null)
+        val project = RegisteredProject("project1", "Project #1", "/path/to/the/project")
         _editor.setProject(project)
         return project
     }
