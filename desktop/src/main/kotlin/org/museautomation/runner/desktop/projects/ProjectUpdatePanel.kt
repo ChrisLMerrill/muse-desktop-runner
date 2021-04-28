@@ -75,7 +75,7 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
         _start_node.children.add(check_button)
         _start_node.children.add(Label(" for updates"))
         check_button.setOnAction {
-            val thread = Thread(Runnable {
+            val thread = Thread({
                 val settings = row_state.row.project.download_settings
                 if (settings == null)
                     showMessage("DownloadSettings is null")
@@ -120,7 +120,7 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
         _ready_node.children.add(update_button)
         _ready_node.children.add(_update_version_label)
         update_button.setOnAction {
-            val thread = Thread(Runnable {
+            val thread = Thread({
                 val updater = _updater
                 if (updater == null)
                     showMessage("Updater is missing")

@@ -2,7 +2,6 @@ package org.museautomation.runner.projects
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.vdurmont.semver4j.Semver
-import java.util.*
 
 /*
  * Provides information about a downloadable (and updatable) projet.
@@ -31,16 +30,8 @@ data class DownloadableProject(val name: String, val url: String, val versions: 
         {
             if (latest_project == null)
                 latest_project = project
-            else
-            {
-                if (latest_project.version == null || project.version == null)
-                    latest_project = project
-                else
-                {
-                    if (Semver(latest_project.version).isGreaterThan(Semver(project.version)))
-                        latest_project = project
-                }
-            }
+            else if (Semver(latest_project.version).isGreaterThan(Semver(project.version)))
+                latest_project = project
         }
         return latest_project
     }
