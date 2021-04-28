@@ -80,4 +80,10 @@ object RegisteredProjects : SettingsFolder(), RegisteredProjectStore
         val file = File(getFolder(FOLDER), project.id + ".json")
         file.delete()
     }
+
+    override fun install(project: DownloadableProjectSettings): InstallResult
+    {
+        val result = ProjectUpdater(project, getFolder(FOLDER).absolutePath).updateUnversioned()
+        return InstallResult(result.success, result.message, null)
+    }
 }

@@ -30,8 +30,8 @@ class ProjectListTableTests: ComponentTest()
 
         assertTrue(exists(local.name))
         assertTrue(exists(download.name))
-        assertTrue(exists(download.download_settings?.spec?.latest?.number.toString()))
-        val formatted_date = _table.date_format.format(download.download_settings?.spec?.latest?.date)
+        assertTrue(exists(download.download_settings?.installedVersion?.version))
+        val formatted_date = _table.date_format.format(download.download_settings?.installedVersion?.date)
         assertTrue(exists(formatted_date))
     }
 
@@ -101,7 +101,7 @@ class ProjectListTableTests: ComponentTest()
     private fun setupDownloadedProject(): RegisteredProject
     {
         val version = ProjectVersion(Date().time, 12, "version 12 notes")
-        val spec = DownloadableProject("Project #1", "version.url", version, emptyList())
+        val spec = DownloadableProject("Project #1", "version.url", emptyList())
         val settings = DownloadableProjectSettings("http://download.me/project", spec, version)
         return RegisteredProject("projectD", "Project Downloaded", "/path/to/the/downloaded/project", settings)
     }
@@ -118,7 +118,7 @@ class ProjectListTableTests: ComponentTest()
     {
         fun setupLocalProject(): RegisteredProject
         {
-            return RegisteredProject("project1", "Project #1", "/path/to/the/project", null)
+            return RegisteredProject("project1", "Project #1", "/path/to/the/project")
         }
     }
 }

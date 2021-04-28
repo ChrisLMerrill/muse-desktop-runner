@@ -7,6 +7,7 @@ import io.undertow.servlet.Servlets
 import io.undertow.servlet.api.DeploymentManager
 import org.jboss.resteasy.core.ResteasyDeploymentImpl
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer
+import org.jboss.resteasy.spi.ResteasyProviderFactory
 import org.slf4j.LoggerFactory
 
 /**
@@ -22,6 +23,7 @@ class RunnerServer {
         val deployment = ResteasyDeploymentImpl()
         deployment.applicationClass = RunnerServerApplication::class.java.name
         deployment.injectorFactoryClass = "org.jboss.resteasy.cdi.CdiInjectorFactory"
+        ResteasyProviderFactory.getInstance().registerProvider(JacksonProvider::class.java)
 
         val deployment_info = server.undertowDeployment(deployment, "/")
         deployment_info.setClassLoader(RunnerServer::class.java.classLoader)

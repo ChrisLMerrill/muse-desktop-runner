@@ -8,12 +8,17 @@ import org.jboss.resteasy.core.SynchronousExecutionContext
 import org.jboss.resteasy.mock.MockDispatcherFactory
 import org.jboss.resteasy.mock.MockHttpRequest
 import org.jboss.resteasy.mock.MockHttpResponse
-import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
-import org.museautomation.runner.projects.RegisteredProject
-import org.museautomation.runner.projects.RegisteredProjectStore
+import org.museautomation.runner.projects.*
+import org.museautomation.runner.server.responses.ErrorResponse
+import java.net.URLEncoder
+import java.nio.charset.Charset
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
@@ -24,27 +29,39 @@ import javax.ws.rs.core.Response
 class ProjectsServiceTests
 {
     private val dispatcher = MockDispatcherFactory.createDispatcher()
-    private val store = mock(RegisteredProjectStore::class.java)
+    private lateinit var store: RegisteredProjectStore
     private val service = ProjectsService()
     private val mapper = ObjectMapper().registerKotlinModule()
     private val project1 = RegisteredProject("project1", "Project 1", "/path/to/project1/")
     private val project2 = RegisteredProject("project2", "Project 2", "/path/to/project2/")
 
+    @BeforeAll
+    fun setupOnce()
+    {
+        dispatcher.registry.addSingletonResource(service)
+        dispatcher.providerFactory.registerProvider(JacksonProvider::class.java)
+    }
+
     @BeforeEach
-    fun setup()
+    fun setupEachTest()
+    {
+        store = mock(RegisteredProjectStore::class.java)
+        service.project_store = store
+    }
+
+    private fun setupProjects()
     {
         Mockito.`when`(store.get("project1"))
             .thenReturn(project1)
         Mockito.`when`(store.get("project2"))
             .thenReturn(project2)
-        Mockito.`when`(store.get("project-missing")).thenReturn(null)
-        service.project_store = store
-        dispatcher.registry.addSingletonResource(service)
+        Mockito.`when`(store.get("missing")).thenReturn(null)
     }
 
     @Test
     fun getFirstProject()
     {
+        setupProjects()
         val result = sendGetProjectByIdRequest("project1")
         assertEquals(Response.Status.OK.statusCode, result.response.status)
         assertNotNull(result.project)
@@ -54,6 +71,7 @@ class ProjectsServiceTests
     @Test
     fun getSecondProject()
     {
+        setupProjects()
         val result = sendGetProjectByIdRequest("project2")
         assertEquals(Response.Status.OK.statusCode, result.response.status)
         assertNotNull(result.project)
@@ -63,6 +81,7 @@ class ProjectsServiceTests
     @Test
     fun getMissingProject()
     {
+        setupProjects()
         val result = sendGetProjectByIdRequest("missing")
         assertEquals(Response.Status.NOT_FOUND.statusCode, result.response.status)
         assertNull(result.project)
@@ -71,6 +90,7 @@ class ProjectsServiceTests
     @Test
     fun getProjects()
     {
+        setupProjects()
         Mockito.`when`(store.getAll()).thenReturn(mutableListOf(project1, project2))
 
         val projects = sendGetProjectList()
@@ -124,8 +144,51 @@ class ProjectsServiceTests
     }
 
     @Test
-    fun getProjectByIdNotFound()
+    fun installProjectUnversioned()
     {
-        assertNull(store.get("project-missing"))
+        val project = DownloadableProjectSettings("my.url", DownloadableProject("project1", "url2", emptyList()), null)
+        Mockito.`when`(store.install(project)).thenReturn(InstallResult(true, null, null))
+        val response = sendInstallProject(project, "project_id1")
+        assertEquals(Response.Status.OK.statusCode, response.status)
+    }
+
+    @Test
+    fun installProjectDuplicateId()
+    {
+        val project = DownloadableProjectSettings("my.url", DownloadableProject("project1", "url2", emptyList()), null)
+        Mockito.`when`(store.install(project)).thenThrow(ProjectAlreadyExistsException("project_id1"))
+        val response = sendInstallProject(project, "project_id1")
+        assertEquals(Response.Status.BAD_REQUEST.statusCode, response.status)
+        val error = mapper.readValue(response.contentAsString, ErrorResponse::class.java)
+        assertTrue(error.message.contains("project_id1"))
+        assertTrue(error.message.contains("exists"))
+    }
+
+    @Test
+    fun installProjectInvalidId()  // id must be ok for a filename - i.e. these are not allowed on Windows: / ? < > \ : * | "
+    {
+        val project = DownloadableProjectSettings("my.url", DownloadableProject("project1", "url2", emptyList()), null)
+        Mockito.`when`(store.install(project)).thenThrow(IllegalProjectIdentifierException())
+        for (c in "/?<>\\:*|\"") // in a loop, check each of these: / ? < > \ : * | "
+        {
+            val response = sendInstallProject(project, "project_id_$c")
+            assertEquals(Response.Status.BAD_REQUEST.statusCode, response.status)
+            val error = mapper.readValue(response.contentAsString, ErrorResponse::class.java)
+            assertTrue(error.message.contains(c))
+        }
+    }
+
+    private fun sendInstallProject(project: DownloadableProjectSettings, id: String): MockHttpResponse
+    {
+        val request = MockHttpRequest.put("/project/id/${URLEncoder.encode(id, Charset.forName("UTF-8"))}")
+        request.content(mapper.writeValueAsBytes(project))
+        request.contentType(MediaType.APPLICATION_JSON_TYPE)
+        request.accept(MediaType.APPLICATION_JSON_TYPE)
+        val response = MockHttpResponse()
+        request.asynchronousContext =
+            SynchronousExecutionContext(dispatcher as SynchronousDispatcher, request, response)
+        dispatcher.invoke(request, response)
+
+        return response
     }
 }

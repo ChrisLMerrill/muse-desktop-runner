@@ -1,5 +1,7 @@
 package org.museautomation.runner.projects
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.vdurmont.semver4j.Semver
 import java.util.*
 
 /*
@@ -10,40 +12,41 @@ import java.util.*
  *
  * @author Christopher L Merrill (see LICENSE.txt for license details)
  */
-class DownloadableProject()
+data class DownloadableProject(val name: String, val url: String, val versions: List<ProjectVersion>)
 {
-    var name: String = ""
-    var versionUrl: String = ""
-    var latest: ProjectVersion = ProjectVersion()
-    var otherVersions: List<ProjectVersion> = mutableListOf()
+//    var name: String = ""
+//    var versionUrl: String = ""
+//    var otherVersions: List<ProjectVersion> = mutableListOf()
 
-    constructor(name: String, versionUrl: String, latest: ProjectVersion, otherVersions: List<ProjectVersion>): this()
+    @JsonIgnore
+    fun getLatest(): ProjectVersion?
     {
-        this.name = name
-        this.versionUrl = versionUrl
-        this.latest = latest
-        this.otherVersions = otherVersions
+        return getNewest(null)
+    }
+
+    fun getNewest(current: ProjectVersion?): ProjectVersion?
+    {
+        var latest_project: ProjectVersion? = current
+        for (project in versions)
+        {
+            if (latest_project == null)
+                latest_project = project
+            else
+            {
+                if (latest_project.version == null || project.version == null)
+                    latest_project = project
+                else
+                {
+                    if (Semver(latest_project.version).isGreaterThan(Semver(project.version)))
+                        latest_project = project
+                }
+            }
+        }
+        return latest_project
     }
 }
 
-class ProjectVersion()
+data class ProjectVersion(val date: Long, val version: String, val notes: String)
 {
-    var date: Long = Date().time
-    var version: String? = null
-    var number: Int = 0
-    var notes: String = ""
-
-    constructor(date: Long, number: Int, notes: String): this()
-    {
-        this.date = date
-        this.version = number.toString()
-        this.notes = notes
-    }
-
-    constructor(date: Long, version: String, notes: String): this()
-    {
-        this.date = date
-        this.version = version
-        this.notes = notes
-    }
+    constructor(date: Long, number: Int, notes: String): this(date, number.toString(), notes)
 }

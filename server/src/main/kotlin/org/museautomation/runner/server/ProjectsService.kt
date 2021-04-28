@@ -1,11 +1,8 @@
 package org.museautomation.runner.server
 
-import org.museautomation.runner.projects.RegisteredProjectStore
-import org.museautomation.runner.projects.RegisteredProjects
-import javax.ws.rs.GET
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
+import org.museautomation.runner.projects.*
+import org.museautomation.runner.server.responses.ErrorResponse
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
@@ -37,4 +34,26 @@ class ProjectsService
         else
             return Response.status(Response.Status.OK).entity(project).build()
     }
+
+    @PUT
+    @Path("/id/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    fun downloadProject(project: DownloadableProjectSettings, @PathParam("id") id: String): Response
+    {
+        try
+        {
+            project_store.install(project)
+            return Response.status(Response.Status.OK).entity(project).build()
+        }
+        catch (exists: ProjectAlreadyExistsException)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ErrorResponse(exists.message ?: "Project exists")).build()
+        }
+        catch (illegal_identifier: IllegalProjectIdentifierException)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ErrorResponse(illegal_identifier.message ?: "Illegal project id")).build()
+        }
+    }
+
 }

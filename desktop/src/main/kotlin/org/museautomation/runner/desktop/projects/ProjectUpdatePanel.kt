@@ -97,9 +97,10 @@ class ProjectUpdatePanel(private val row_state: RowUpdateState)
                         else
                         {
                             val installed = settings.installedVersion
-                            if (installed == null || installed.number < download_spec.latest.number)
+                            val latest = download_spec.getNewest(installed)
+                            if (latest != null && latest != installed)
                             {
-                                _update_version_label.text = " to version " + download_spec.latest.number
+                                _update_version_label.text = " to version " + latest.version
                                 setState(ProjectUpdateState.ReadyToUpdate)
                             }
                             else
